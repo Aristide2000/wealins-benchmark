@@ -29,10 +29,10 @@ LLM_CONFIG = {
         "couleur":  "#10B981",
     },
     "gemini": {
-        "nom":      "Gemini",
-        "modele":   "google/gemini-2.0-flash-exp:free",
-        "provider": "OpenRouter",
-        "couleur":  "#3B82F6",
+    "nom":      "Gemini",
+    "modele":   "google/gemini-flash-latest",
+    "provider": "OpenRouter",
+    "couleur":  "#3B82F6",
     },
     "deepseek": {
         "nom":      "DeepSeek",
