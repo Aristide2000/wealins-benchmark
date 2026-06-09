@@ -197,30 +197,22 @@ def formater_classement(scores: dict) -> list:
 
     return classement
 
-
-def parser_json_llm(texte: str) -> dict:
+def parser_json_llm(texte) -> dict:
     """
     Parse la réponse JSON d'un LLM juge.
-    Gère les cas où le LLM ajoute du texte autour du JSON.
-
-    Paramètre :
-        texte (str) : réponse brute du LLM
-
-    Retourne :
-        dict : JSON parsé ou {} si échec
-
-    Exemple :
-        texte = '```json\n{"A": {"exactitude": 8}}\n```'
-        → {"A": {"exactitude": 8}}
+    Gère les cas où le LLM retourne None ou du texte invalide.
     """
+    # Sécurité — si None ou vide → retourne {}
+    if not texte:
+        print("⚠️  Réponse vide ou None reçue")
+        return {}
+
     try:
-        # Cas 1 : JSON propre direct
         return json.loads(texte.strip())
     except json.JSONDecodeError:
         pass
 
     try:
-        # Cas 2 : JSON entre ```json et ```
         if "```json" in texte:
             contenu = texte.split("```json")[1].split("```")[0]
             return json.loads(contenu.strip())
@@ -228,15 +220,13 @@ def parser_json_llm(texte: str) -> dict:
         pass
 
     try:
-        # Cas 3 : JSON entre ``` et ```
         if "```" in texte:
             contenu = texte.split("```")[1].split("```")[0]
             return json.loads(contenu.strip())
     except (json.JSONDecodeError, IndexError):
         pass
 
-    # Échec total
-    print(f"❌ Impossible de parser le JSON : {texte[:100]}...")
+    print(f"❌ Impossible de parser le JSON : {str(texte)[:100]}...")
     return {}
 
 

@@ -40,10 +40,10 @@ LLM_CONFIG = {
         "couleur":  "#10B981",
     },
     "gemini": {
-        "nom":      "Gemini",
-        "modele":   "gemini-1.5-flash",
-        "provider": "Google",
-        "couleur":  "#3B82F6",
+    "nom":      "Gemini",
+    "modele":   "google/gemini-2.0-flash-001",
+    "provider": "OpenRouter",  
+    "couleur":  "#3B82F6",
     },
     "deepseek": {
         "nom":      "DeepSeek",
@@ -52,10 +52,10 @@ LLM_CONFIG = {
         "couleur":  "#EF4444",
     },
     "mistral": {
-        "nom":      "Mistral",
-        "modele":   "mistralai/mistral-small",
-        "provider": "OpenRouter",
-        "couleur":  "#F59E0B",
+    "nom":      "Mistral",
+    "modele":   "mistralai/mistral-small-3.1-24b-instruct",
+    "provider": "OpenRouter",
+    "couleur":  "#F59E0B",
     },
     "llama": {
         "nom":      "Llama 4",
@@ -70,10 +70,10 @@ LLM_CONFIG = {
         "couleur":  "#EC4899",
     },
     "commandr": {
-        "nom":      "Command R+",
-        "modele":   "command-r-plus",
-        "provider": "Cohere",
-        "couleur":  "#14B8A6",
+    "nom":      "Command R+",
+    "modele":   "command-a-03-2025",
+    "provider": "Cohere",
+    "couleur":  "#14B8A6",
     },
     "phi4": {
         "nom":      "Phi-4",
@@ -121,13 +121,16 @@ def _appeler_openrouter(modele: str, prompt: str) -> str:
 
 def _appeler_google(modele: str, prompt: str) -> str:
     """
-    Appelle Gemini via Google AI Studio.
-    Clé gratuite disponible sur aistudio.google.com
+    Appelle Gemini via le nouveau SDK Google.
     """
-    import google.generativeai as genai
-    genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-    model = genai.GenerativeModel(modele)
-    response = model.generate_content(prompt)
+    from google import genai
+    client = genai.Client(
+        api_key=os.getenv("GOOGLE_API_KEY")
+    )
+    response = client.models.generate_content(
+        model=modele,
+        contents=prompt
+    )
     return response.text
 
 
