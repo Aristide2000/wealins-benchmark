@@ -322,7 +322,7 @@ with tab2:
             r=valeurs,
             theta=cats,
             fill="toself",
-            fillcolor=data["couleur"] + "30",
+            fillcolor="rgba(100,100,100,0.1)",
             line_color=data["couleur"],
             line_width=2,
             name=data["nom"],

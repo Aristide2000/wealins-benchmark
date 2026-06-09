@@ -164,11 +164,12 @@ def jury_tournant(
                 # Nettoie les notes (force entre 0 et 10)
                 notes_propres = {}
                 for pseudo, criteres in notes.items():
-                    notes_propres[pseudo] = {
-                        c: nettoyer_note(n)
-                        for c, n in criteres.items()
-                        if c in CRITERES
-                    }
+                    if isinstance(criteres, dict):
+                        notes_propres[pseudo] = {
+                            c: nettoyer_note(n)
+                            for c, n in criteres.items()
+                            if c in CRITERES
+                        }
                 toutes_notes[q["id"]][llm_juge_id] = notes_propres
                 print("✅")
             else:

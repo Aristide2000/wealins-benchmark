@@ -200,18 +200,22 @@ def formater_classement(scores: dict) -> list:
 def parser_json_llm(texte) -> dict:
     """
     Parse la réponse JSON d'un LLM juge.
-    Gère les cas où le LLM retourne None ou du texte invalide.
+    Gère tous les cas possibles.
     """
-    # Sécurité — si None ou vide → retourne {}
+    # Sécurité — si None ou vide
     if not texte:
         print("⚠️  Réponse vide ou None reçue")
         return {}
 
+    texte = texte.strip()
+
+    # Cas 1 : JSON propre direct
     try:
-        return json.loads(texte.strip())
+        return json.loads(texte)
     except json.JSONDecodeError:
         pass
 
+    # Cas 2 : Entre ```json et ```
     try:
         if "```json" in texte:
             contenu = texte.split("```json")[1].split("```")[0]
@@ -219,16 +223,27 @@ def parser_json_llm(texte) -> dict:
     except (json.JSONDecodeError, IndexError):
         pass
 
+    # Cas 3 : Entre ``` et ```
     try:
         if "```" in texte:
-            contenu = texte.split("```")[1].split("```")[0]
-            return json.loads(contenu.strip())
+            parties = texte.split("```")
+            for partie in parties:
+                partie = partie.strip()
+                if partie.startswith("{"):
+                    return json.loads(partie)
     except (json.JSONDecodeError, IndexError):
         pass
 
-    print(f"❌ Impossible de parser le JSON : {str(texte)[:100]}...")
-    return {}
+    # Cas 4 : Cherche { } n'importe où dans le texte
+    try:
+        debut = texte.index("{")
+        fin   = texte.rindex("}") + 1
+        return json.loads(texte[debut:fin])
+    except (json.JSONDecodeError, ValueError):
+        pass
 
+    print(f"❌ Impossible de parser le JSON : {texte[:100]}...")
+    return {}
 
 def afficher_progression(etape: str, actuel: int, total: int):
     """
