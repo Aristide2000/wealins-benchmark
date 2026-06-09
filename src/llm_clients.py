@@ -96,10 +96,11 @@ def _appeler_openrouter(modele: str, prompt: str) -> str:
         base_url="https://openrouter.ai/api/v1"
     )
     response = client.chat.completions.create(
-        model=modele,
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=1500
-    )
+    model=modele,
+    messages=[{"role": "user", "content": prompt}],
+    max_tokens=3000,
+    temperature=0
+)
     return response.choices[0].message.content
 
 

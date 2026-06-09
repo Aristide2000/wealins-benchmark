@@ -32,67 +32,32 @@ def construire_prompt_notation(
     reponses_anonymes: dict,
     pseudo_juge: str
 ) -> str:
-    """
-    Construit le prompt envoyé au LLM juge.
-    Le juge reçoit les réponses anonymisées
-    sans savoir qu'il pourrait noter la sienne !
 
-    Paramètres :
-        question         (dict) : la question posée
-        reponses_anonymes(dict) : {"A": reponse, "B": reponse...}
-        pseudo_juge      (str)  : lettre du LLM juge ex "A"
-
-    Retourne :
-        str : le prompt complet à envoyer au juge
-    """
-    # Construit le texte des réponses à noter
     reponses_texte = ""
     for pseudo, reponse in reponses_anonymes.items():
-        reponse_q = reponse.get(question["id"], "Pas de réponse")
-        reponses_texte += f"\n--- Répondant {pseudo} ---\n{reponse_q}\n"
+        reponse_q = reponse.get(
+    str(question["id"]),
+    reponse.get(question["id"], "Pas de réponse")
+)
+        reponse_courte = str(reponse_q)[:500]
+        reponses_texte += f"\n[{pseudo}]: {reponse_courte}\n"
 
-    # Construit la liste des critères
-    criteres_texte = "\n".join([
-        f'  "{c_id}": note de 0 à 10  # {c["label"]}'
-        for c_id, c in CRITERES.items()
-    ])
+    prompt = f"""Tu es un expert en assurance vie luxembourgeoise.
+Note chaque répondant sur 8 critères de 0 à 10.
+RÉPONDS UNIQUEMENT EN JSON VALIDE. AUCUN TEXTE AVANT OU APRÈS.
 
-    # Prompt final
-    prompt = f"""Tu es un expert indépendant en assurance vie luxembourgeoise.
-Tu dois évaluer objectivement des réponses à une question métier.
+QUESTION: {question['question'][:200]}
 
-QUESTION POSÉE :
-{question['question']}
-
-RÉPONSES À ÉVALUER :
+RÉPONSES:
 {reponses_texte}
 
-CRITÈRES D'ÉVALUATION :
-{criteres_texte}
-
-INSTRUCTIONS IMPORTANTES :
-- Note chaque répondant sur chacun des 8 critères (0 à 10)
-- Sois objectif et rigoureux
-- Base-toi uniquement sur la qualité de la réponse
-- Réponds UNIQUEMENT en JSON valide
-- Pas de texte avant ou après le JSON
-
-FORMAT EXACT ATTENDU :
+RÉPONDS EXACTEMENT DANS CE FORMAT JSON:
 {{
-  "A": {{
-    "exactitude_technique": 8,
-    "maitrise_vocabulaire": 7,
-    "pertinence_reglementaire": 6,
-    "completude": 8,
-    "clarte_lisibilite": 9,
-    "absence_hallucinations": 8,
-    "applicabilite_pratique": 7,
-    "gestion_incertitude": 6
-  }},
-  "B": {{ ... }}
+  "A": {{"exactitude_technique": 8, "maitrise_vocabulaire": 7, "pertinence_reglementaire": 6, "completude": 8, "clarte_lisibilite": 9, "absence_hallucinations": 8, "applicabilite_pratique": 7, "gestion_incertitude": 6}},
+  "B": {{"exactitude_technique": 7, "maitrise_vocabulaire": 8, "pertinence_reglementaire": 7, "completude": 7, "clarte_lisibilite": 8, "absence_hallucinations": 7, "applicabilite_pratique": 6, "gestion_incertitude": 5}}
 }}
 
-Évalue maintenant tous les répondants :"""
+JSON UNIQUEMENT:"""
 
     return prompt
 

@@ -77,7 +77,7 @@ Réponse :"""
 
             # Appelle le LLM
             reponse = appeler_llm(llm_id, prompt)
-            reponses[llm_id][q["id"]] = reponse
+            reponses[llm_id][str(q["id"])] = reponse
 
             if reponse.startswith("ERREUR"):
                 print("❌")

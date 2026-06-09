@@ -202,7 +202,6 @@ def parser_json_llm(texte) -> dict:
     Parse la réponse JSON d'un LLM juge.
     Gère tous les cas possibles.
     """
-    # Sécurité — si None ou vide
     if not texte:
         print("⚠️  Réponse vide ou None reçue")
         return {}
@@ -234,7 +233,7 @@ def parser_json_llm(texte) -> dict:
     except (json.JSONDecodeError, IndexError):
         pass
 
-    # Cas 4 : Cherche { } n'importe où dans le texte
+    # Cas 4 : Cherche { } n'importe où
     try:
         debut = texte.index("{")
         fin   = texte.rindex("}") + 1
