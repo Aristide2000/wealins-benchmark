@@ -42,7 +42,7 @@ LLM_CONFIG = {
     },
     "mistral": {
         "nom":      "Mistral",
-        "modele":   "mistralai/mistral-small-3.1-24b-instruct",
+        "modele":   "mistralai/mistral-nemo",
         "provider": "OpenRouter",
         "couleur":  "#F59E0B",
     },

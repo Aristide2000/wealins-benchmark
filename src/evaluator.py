@@ -57,11 +57,15 @@ RÉPONDS EXACTEMENT DANS CE FORMAT JSON:
   "B": {{"exactitude_technique": 7, "maitrise_vocabulaire": 8, "pertinence_reglementaire": 7, "completude": 7, "clarte_lisibilite": 8, "absence_hallucinations": 7, "applicabilite_pratique": 6, "gestion_incertitude": 5}}
 }}
 
-JSON UNIQUEMENT:"""
+Retourne SEULEMENT le JSON brut sans markdown.
+Format obligatoire — accolades externes incluses :
+{{
+  "A": {{"exactitude_technique": 8, ...}},
+  "B": {{"exactitude_technique": 7, ...}}
+}}
+JSON:"""
 
     return prompt
-
-
 # ============================================================
 # ÉTAPE 2 — JURY TOURNANT
 # ============================================================

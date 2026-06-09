@@ -214,12 +214,22 @@ def parser_json_llm(texte) -> dict:
     except json.JSONDecodeError:
         pass
 
-    # Cas 2 : Entre ```json et ```
+    # Cas 2 : Entre ```json et ``` (même tronqué)
     try:
         if "```json" in texte:
-            contenu = texte.split("```json")[1].split("```")[0]
-            return json.loads(contenu.strip())
-    except (json.JSONDecodeError, IndexError):
+            contenu = texte.split("```json")[1]
+            if "```" in contenu:
+                contenu = contenu.split("```")[0]
+            contenu = contenu.strip()
+            try:
+                return json.loads(contenu)
+            except json.JSONDecodeError:
+                nb_ouvrants    = contenu.count("{")
+                nb_fermants    = contenu.count("}")
+                manquants      = nb_ouvrants - nb_fermants
+                contenu_repare = contenu + "}" * manquants
+                return json.loads(contenu_repare)
+    except Exception:
         pass
 
     # Cas 3 : Entre ``` et ```
@@ -241,9 +251,22 @@ def parser_json_llm(texte) -> dict:
     except (json.JSONDecodeError, ValueError):
         pass
 
+    # Cas 5 : Format [A]: {...}
+    try:
+        import re
+        pattern = r'\[([A-Z])\]\s*:\s*(\{[^}]+\})'
+        matches = re.findall(pattern, texte)
+        if matches:
+            resultat = {}
+            for pseudo, json_str in matches:
+                resultat[pseudo] = json.loads(json_str)
+            if resultat:
+                return resultat
+    except Exception:
+        pass
+
     print(f"❌ Impossible de parser le JSON : {texte[:100]}...")
     return {}
-
 def afficher_progression(etape: str, actuel: int, total: int):
     """
     Affiche une barre de progression dans le terminal.
