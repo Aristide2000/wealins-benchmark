@@ -198,52 +198,42 @@ def formater_classement(scores: dict) -> list:
     return classement
 
 def parser_notes_texte(texte: str) -> dict:
-    """
-    Parse le format texte :
-    A-exactitude_technique:8
-    A-maitrise_vocabulaire:7
-    ...
-
-    Beaucoup plus robuste que JSON !
-    Fonctionne même si le LLM ajoute
-    du texte autour des notes.
-    """
+    """Parse le format texte A-critere:note"""
     if not texte:
         print("⚠️  Réponse vide ou None reçue")
         return {}
 
-    notes    = {}
-    lignes   = texte.strip().split("\n")
+    notes  = {}
+    lignes = texte.strip().split("\n")
 
     for ligne in lignes:
         ligne = ligne.strip()
-
-        # Ignore lignes vides ou sans les deux séparateurs
         if ":" not in ligne or "-" not in ligne:
             continue
-
         try:
-            # Format : "A-exactitude_technique:8"
             partie_gauche, note_str = ligne.rsplit(":", 1)
             pseudo, critere         = partie_gauche.split("-", 1)
-
             pseudo  = pseudo.strip().upper()
             critere = critere.strip()
             note    = float(note_str.strip())
-
-            # Vérifie que c'est un pseudo valide (lettre A-K)
             if len(pseudo) != 1 or not pseudo.isalpha():
                 continue
-
             if pseudo not in notes:
                 notes[pseudo] = {}
-
             notes[pseudo][critere] = note
-
         except (ValueError, AttributeError):
             continue
 
     return notes
+
+
+def parser_json_llm(texte) -> dict:
+    """Parse le format JSON — fallback"""
+    if not texte:
+        print("⚠️  Réponse vide ou None reçue")
+        return {}
+
+    texte = texte.strip()
 
     # Cas 1 : JSON propre direct
     try:
@@ -251,7 +241,7 @@ def parser_notes_texte(texte: str) -> dict:
     except json.JSONDecodeError:
         pass
 
-    # Cas 2 : Entre ```json et ``` (même tronqué)
+    # Cas 2 : Entre ```json et ```
     try:
         if "```json" in texte:
             contenu = texte.split("```json")[1]
@@ -286,20 +276,6 @@ def parser_notes_texte(texte: str) -> dict:
         fin   = texte.rindex("}") + 1
         return json.loads(texte[debut:fin])
     except (json.JSONDecodeError, ValueError):
-        pass
-
-    # Cas 5 : Format [A]: {...}
-    try:
-        import re
-        pattern = r'\[([A-Z])\]\s*:\s*(\{[^}]+\})'
-        matches = re.findall(pattern, texte)
-        if matches:
-            resultat = {}
-            for pseudo, json_str in matches:
-                resultat[pseudo] = json.loads(json_str)
-            if resultat:
-                return resultat
-    except Exception:
         pass
 
     print(f"❌ Impossible de parser le JSON : {texte[:100]}...")
