@@ -197,16 +197,53 @@ def formater_classement(scores: dict) -> list:
 
     return classement
 
-def parser_json_llm(texte) -> dict:
+def parser_notes_texte(texte: str) -> dict:
     """
-    Parse la réponse JSON d'un LLM juge.
-    Gère tous les cas possibles.
+    Parse le format texte :
+    A-exactitude_technique:8
+    A-maitrise_vocabulaire:7
+    ...
+
+    Beaucoup plus robuste que JSON !
+    Fonctionne même si le LLM ajoute
+    du texte autour des notes.
     """
     if not texte:
         print("⚠️  Réponse vide ou None reçue")
         return {}
 
-    texte = texte.strip()
+    notes    = {}
+    lignes   = texte.strip().split("\n")
+
+    for ligne in lignes:
+        ligne = ligne.strip()
+
+        # Ignore lignes vides ou sans les deux séparateurs
+        if ":" not in ligne or "-" not in ligne:
+            continue
+
+        try:
+            # Format : "A-exactitude_technique:8"
+            partie_gauche, note_str = ligne.rsplit(":", 1)
+            pseudo, critere         = partie_gauche.split("-", 1)
+
+            pseudo  = pseudo.strip().upper()
+            critere = critere.strip()
+            note    = float(note_str.strip())
+
+            # Vérifie que c'est un pseudo valide (lettre A-K)
+            if len(pseudo) != 1 or not pseudo.isalpha():
+                continue
+
+            if pseudo not in notes:
+                notes[pseudo] = {}
+
+            notes[pseudo][critere] = note
+
+        except (ValueError, AttributeError):
+            continue
+
+    return notes
 
     # Cas 1 : JSON propre direct
     try:

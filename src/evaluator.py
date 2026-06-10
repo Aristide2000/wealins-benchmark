@@ -20,7 +20,8 @@ from src.utils import (
     calculer_moyenne,
     nettoyer_note,
     parser_json_llm,
-    afficher_progression
+    afficher_progression,
+    parser_notes_texte
 )
 
 # ============================================================
@@ -36,34 +37,41 @@ def construire_prompt_notation(
     reponses_texte = ""
     for pseudo, reponse in reponses_anonymes.items():
         reponse_q = reponse.get(
-    str(question["id"]),
-    reponse.get(question["id"], "Pas de réponse")
-)
+            str(question["id"]),
+            reponse.get(question["id"], "Pas de réponse")
+        )
         reponse_courte = str(reponse_q)[:500]
         reponses_texte += f"\n[{pseudo}]: {reponse_courte}\n"
 
+    # Liste des pseudos présents
+    pseudos = list(reponses_anonymes.keys())
+    exemple = "\n".join([
+        f"{p}-exactitude_technique:8\n"
+        f"{p}-maitrise_vocabulaire:7\n"
+        f"{p}-pertinence_reglementaire:6\n"
+        f"{p}-completude:8\n"
+        f"{p}-clarte_lisibilite:9\n"
+        f"{p}-absence_hallucinations:8\n"
+        f"{p}-applicabilite_pratique:7\n"
+        f"{p}-gestion_incertitude:6"
+        for p in pseudos[:2]
+    ])
+
     prompt = f"""Tu es un expert en assurance vie luxembourgeoise.
 Note chaque répondant sur 8 critères de 0 à 10.
-RÉPONDS UNIQUEMENT EN JSON VALIDE. AUCUN TEXTE AVANT OU APRÈS.
 
 QUESTION: {question['question'][:200]}
 
-RÉPONSES:
+RÉPONSES À NOTER:
 {reponses_texte}
 
-RÉPONDS EXACTEMENT DANS CE FORMAT JSON:
-{{
-  "A": {{"exactitude_technique": 8, "maitrise_vocabulaire": 7, "pertinence_reglementaire": 6, "completude": 8, "clarte_lisibilite": 9, "absence_hallucinations": 8, "applicabilite_pratique": 7, "gestion_incertitude": 6}},
-  "B": {{"exactitude_technique": 7, "maitrise_vocabulaire": 8, "pertinence_reglementaire": 7, "completude": 7, "clarte_lisibilite": 8, "absence_hallucinations": 7, "applicabilite_pratique": 6, "gestion_incertitude": 5}}
-}}
+RÉPONDS EXACTEMENT DANS CE FORMAT
+(une note par ligne, critere:note) :
 
-Retourne SEULEMENT le JSON brut sans markdown.
-Format obligatoire — accolades externes incluses :
-{{
-  "A": {{"exactitude_technique": 8, ...}},
-  "B": {{"exactitude_technique": 7, ...}}
-}}
-JSON:"""
+{exemple}
+
+Continue pour tous les répondants {', '.join(pseudos)}.
+NOTES:"""
 
     return prompt
 # ============================================================
@@ -126,8 +134,11 @@ def jury_tournant(
             # Appelle le LLM juge
             reponse_brute = appeler_llm(llm_juge_id, prompt)
 
-            # Parse le JSON retourné
-            notes = parser_json_llm(reponse_brute)
+           # Essaie d'abord le format texte
+            # puis JSON en fallback
+            notes = parser_notes_texte(reponse_brute)
+            if not notes:
+                notes = parser_json_llm(reponse_brute)
 
             if notes:
                 # Nettoie les notes (force entre 0 et 10)

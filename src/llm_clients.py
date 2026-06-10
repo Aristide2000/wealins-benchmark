@@ -54,7 +54,7 @@ LLM_CONFIG = {
     },
     "qwen": {
         "nom":      "Qwen",
-        "modele":   "qwen/qwen-2.5-72b-instruct:free",
+        "modele":   "qwen/qwen-2.5-72b-instruct",
         "provider": "OpenRouter",
         "couleur":  "#EC4899",
     },
