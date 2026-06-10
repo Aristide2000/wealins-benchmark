@@ -198,8 +198,9 @@ def calculer_scores_finaux(
             "notes_brutes": {c: [] for c in CRITERES.keys()}
         }
 
-    # Mapping inverse : pseudo → llm_id
-    llm_par_pseudo = {v: k for k, v in mapping_secret.items()}
+    # mapping_secret = {"A": "claude", "B": "gpt"...}
+    # pseudo → llm_id = déjà le bon sens !
+    llm_par_pseudo = mapping_secret
 
     # Agrège toutes les notes reçues
     for q_id, notes_question in toutes_notes.items():

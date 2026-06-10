@@ -98,5 +98,55 @@
         "score": 0.0
       }
     ]
+  },
+  {
+    "date": "2026-06-10",
+    "fichier": "results\\benchmark_2026-06-10.json",
+    "classement": [
+      {
+        "llm": "Claude",
+        "score": 0.0
+      },
+      {
+        "llm": "GPT",
+        "score": 0.0
+      },
+      {
+        "llm": "Gemini",
+        "score": 0.0
+      },
+      {
+        "llm": "DeepSeek",
+        "score": 0.0
+      },
+      {
+        "llm": "Mistral",
+        "score": 0.0
+      },
+      {
+        "llm": "Llama 4",
+        "score": 0.0
+      },
+      {
+        "llm": "Qwen",
+        "score": 0.0
+      },
+      {
+        "llm": "Command R+",
+        "score": 0.0
+      },
+      {
+        "llm": "Phi-4",
+        "score": 0.0
+      },
+      {
+        "llm": "Gemma 3",
+        "score": 0.0
+      },
+      {
+        "llm": "Llama 3.3",
+        "score": 0.0
+      }
+    ]
   }
 ]
