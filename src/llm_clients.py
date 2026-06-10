@@ -54,7 +54,7 @@ LLM_CONFIG = {
     },
     "qwen": {
         "nom":      "Qwen",
-        "modele":   "qwen/qwen-2.5-72b-instruct",
+        "modele":   "qwen/qwen-2.5-72b-instruct:free",
         "provider": "OpenRouter",
         "couleur":  "#EC4899",
     },
@@ -99,7 +99,8 @@ def _appeler_openrouter(modele: str, prompt: str) -> str:
     model=modele,
     messages=[{"role": "user", "content": prompt}],
     max_tokens=3000,
-    temperature=0
+    temperature=0,
+    timeout=60 
 )
     return response.choices[0].message.content
 
