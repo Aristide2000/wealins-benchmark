@@ -332,5 +332,39 @@
         "score": 6.94
       }
     ]
+  },
+  {
+    "date": "2026-06-11",
+    "fichier": "results/benchmark_2026-06-11.json",
+    "classement": [
+      {
+        "llm": "Gemini",
+        "score": 7.86
+      },
+      {
+        "llm": "Gemma 3",
+        "score": 7.81
+      },
+      {
+        "llm": "Claude",
+        "score": 7.48
+      },
+      {
+        "llm": "Command R+",
+        "score": 7.45
+      },
+      {
+        "llm": "GPT",
+        "score": 7.4
+      },
+      {
+        "llm": "Llama 3.3",
+        "score": 7.02
+      },
+      {
+        "llm": "Qwen",
+        "score": 6.44
+      }
+    ]
   }
 ]
