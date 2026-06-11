@@ -134,7 +134,7 @@ def jury_tournant(
             # Appelle le LLM juge
             reponse_brute = appeler_llm(llm_juge_id, prompt)
 
-           # Essaie d'abord le format texte
+            # Essaie d'abord le format texte
             # puis JSON en fallback
             notes = parser_notes_texte(reponse_brute)
             if not notes:

@@ -248,5 +248,55 @@
         "score": 6.28
       }
     ]
+  },
+  {
+    "date": "2026-06-10",
+    "fichier": "results\\benchmark_2026-06-10.json",
+    "classement": [
+      {
+        "llm": "DeepSeek",
+        "score": 8.27
+      },
+      {
+        "llm": "Command R+",
+        "score": 7.9
+      },
+      {
+        "llm": "Gemma 3",
+        "score": 7.75
+      },
+      {
+        "llm": "Qwen",
+        "score": 7.57
+      },
+      {
+        "llm": "Gemini",
+        "score": 7.48
+      },
+      {
+        "llm": "Claude",
+        "score": 7.3
+      },
+      {
+        "llm": "GPT",
+        "score": 7.29
+      },
+      {
+        "llm": "Phi-4",
+        "score": 7.2
+      },
+      {
+        "llm": "Llama 3.3",
+        "score": 6.82
+      },
+      {
+        "llm": "Llama 4",
+        "score": 6.77
+      },
+      {
+        "llm": "Mistral",
+        "score": 6.32
+      }
+    ]
   }
 ]
