@@ -88,30 +88,20 @@ def charger_hist():
 # ============================================================
 
 with st.sidebar:
-    st.markdown("## ⚙️ Contrôles")
+    st.markdown("## ⚙️ À propos")
     st.markdown("---")
 
-    # Ajustement des poids en temps réel
-    st.markdown("### 🎚️ Ajuste les poids")
-    st.caption("Modifie et vois l'impact sur le classement !")
+    st.markdown("### 🎯 Méthodologie")
+    st.caption(
+        "Chaque LLM répond à 10 questions métier, "
+        "puis est évalué en aveugle par les autres "
+        "LLMs sur 8 critères pondérés."
+    )
 
-    poids = {}
+    st.markdown("### ⚖️ Pondération des critères")
     for c_id, c_info in CRITERES.items():
-        poids[c_id] = st.slider(
-            c_info["label"],
-            min_value=0.0,
-            max_value=0.5,
-            value=float(c_info["poids"]),
-            step=0.05,
-            key=f"poids_{c_id}"
-        )
-
-    # Vérifie que le total = 1.0
-    total = sum(poids.values())
-    if abs(total - 1.0) > 0.01:
-        st.warning(f"⚠️ Total : {total:.2f} (doit = 1.0)")
-    else:
-        st.success(f"✅ Total : {total:.2f}")
+        pct = int(c_info["poids"] * 100)
+        st.markdown(f"- **{c_info['label']}** : {pct}%")
 
     st.markdown("---")
 
@@ -123,8 +113,10 @@ with st.sidebar:
 
     st.markdown("---")
     st.caption("📅 Wealins LLM Benchmark v1.0")
-    st.caption("🔄 Run automatique le 1er du mois")
+    st.caption("🔄 Run trimestriel (tous les 3 mois)")
 
+# Poids fixes (issus de questions.py)
+poids = {c_id: c_info["poids"] for c_id, c_info in CRITERES.items()}
 
 # ============================================================
 # HEADER
@@ -136,7 +128,7 @@ st.markdown("""
         🏆 Wealins — LLM Benchmark
     </h1>
     <p style="margin:8px 0 0 0;color:rgba(255,255,255,0.8)">
-        Veille technologique · 11 LLMs ·
+        Veille technologique · 8 LLMs ·
         10 questions assurance vie luxembourgeoise
     </p>
 </div>
@@ -442,11 +434,11 @@ with tab4:
 
     if len(historique) < 2:
         st.info("""
-        📅 L'historique s'enrichit chaque mois !
+        📅 L'historique s'enrichit à chaque run !
 
         **Comment ça fonctionne :**
-        - Le benchmark tourne automatiquement
-          le 1er de chaque mois via GitHub Actions
+        - Le benchmark tourne tous les 3 mois
+          via GitHub Actions
         - Chaque run est sauvegardé
         - Tu verras ici qui progresse et qui régresse
         """)

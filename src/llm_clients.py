@@ -42,7 +42,7 @@ LLM_CONFIG = {
     },
     "commandr": {
         "nom":      "Command R+",
-        "modele":   "cohere/command-a-03-2025",
+        "modele":   "cohere/command-a",
         "provider": "OpenRouter",
         "couleur":  "#8B5CF6",
     },
@@ -74,7 +74,7 @@ def _appeler_openrouter(modele: str, prompt: str) -> str:
     response = client.chat.completions.create(
     model=modele,
     messages=[{"role": "user", "content": prompt}],
-    max_tokens=3000,
+    max_tokens=4000,
     temperature=0,
     timeout=60 
 )
