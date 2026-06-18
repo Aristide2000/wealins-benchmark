@@ -7,16 +7,16 @@ Ce document recense tout ce qui a été fait sur ce projet : architecture, bugs 
 ## 1. État actuel du projet (résumé)
 
 ```
-✅ Architecture complète (src/, data/, results/, dashboard.py, run.py)
-✅ 7 LLM sélectionnés et fonctionnels via OpenRouter
-✅ Pipeline de benchmark complet (collecte + jury tournant + scores)
-✅ Dashboard Streamlit déployé publiquement
-✅ Détection automatique de nouvelles versions de LLM (detector.py)
-✅ Décision automatique de lancer un run (scheduler.py)
-✅ Notifications email (notifier.py)
-✅ GitHub Actions — pipeline complet automatisé et VALIDÉ (run réussi de bout en bout)
-✅ Dépôt GitHub public + Streamlit Cloud déployé
-✅ README.md, Guide Git, Notes techniques rédigés
+   Architecture complète (src/, data/, results/, dashboard.py, run.py)
+   7 LLM sélectionnés et fonctionnels via OpenRouter
+   Pipeline de benchmark complet (collecte + jury tournant + scores)
+   Dashboard Streamlit déployé publiquement
+   Détection automatique de nouvelles versions de LLM (detector.py)
+   Décision automatique de lancer un run (scheduler.py)
+   Notifications email (notifier.py)
+   GitHub Actions — pipeline complet automatisé et VALIDÉ (run réussi de bout en bout)
+   Dépôt GitHub public + Streamlit Cloud déployé
+   README.md, Guide Git, Notes techniques rédigés
 ```
 
 🔗 **Dashboard public** : https://wealins-benchmark-nomhgcjhfdyvgzpxkz8cfn.streamlit.app/
@@ -282,25 +282,25 @@ ajouté en tête de fichier, avant tout `os.getenv()`.
 ## 6. Ce qui reste à faire
 
 ```
-⏳ Surveiller le premier run automatique du cron
+   Surveiller le premier run automatique du cron
    (prochain lundi 6h UTC) — vérifier que tout se déclenche
    sans intervention
 
-⏳ Évaluer si certains modèles écartés (DeepSeek, Mistral,
+   Évaluer si certains modèles écartés (DeepSeek, Mistral,
    Phi-4, Llama 4 Scout) méritent d'être retestés si une
    version plus stable sort (via detector.py)
 
-⏳ Nettoyer requirements.txt : retirer les dépendances
+   Nettoyer requirements.txt : retirer les dépendances
    non utilisées (anthropic, mistralai, groq, cohere,
    google-generativeai, notebook) — tout passe par
    `openai` + OpenRouter désormais
 
-⏳ Optionnel : remplacer actions/checkout@v4 et
+   Optionnel : remplacer actions/checkout@v4 et
    actions/setup-python@v5 par des versions compatibles
    Node.js 24 avant l'échéance de septembre 2026
    (warning non bloquant actuellement)
 
-⏳ Optionnel : envisager de réintégrer progressivement
+   Optionnel : envisager de réintégrer progressivement
    des modèles supplémentaires si leur fiabilité
    en tant que juge s'améliore avec de nouvelles versions
 ```
@@ -331,7 +331,7 @@ python -c "from run import run_avec_decision; run_avec_decision()"
 
 Pour relancer GitHub Actions manuellement : onglet **Actions** → "Wealins LLM Benchmark" → **Run workflow** → branche `dev`.
 
-⚠️ Chaque run consomme ~140 appels OpenRouter (~0,50 à 1 €). Vérifier le solde avant de lancer : https://openrouter.ai/settings/credits
+ Chaque run consomme ~140 appels OpenRouter (~0,50 à 1 €). Vérifier le solde avant de lancer : https://openrouter.ai/settings/credits
 
 ---
 

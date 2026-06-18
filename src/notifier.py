@@ -36,7 +36,7 @@ def envoyer_email(sujet: str, corps: str) -> bool:
     destinataire   = os.getenv("EMAIL_DESTINATAIRE")
 
     if not all([expediteur, mot_de_passe, destinataire]):
-        print("⚠️  Configuration email incomplète (.env)")
+        print(" Configuration email incomplète (.env)")
         print("    Variables nécessaires : GMAIL_ADRESSE, "
               "GMAIL_MOT_DE_PASSE_APP, EMAIL_DESTINATAIRE")
         return False
@@ -53,11 +53,11 @@ def envoyer_email(sujet: str, corps: str) -> bool:
             serveur.login(expediteur, mot_de_passe)
             serveur.send_message(msg)
 
-        print(f"  ✅ Email envoyé à {destinataire}")
+        print(f"   Email envoyé à {destinataire}")
         return True
 
     except Exception as e:
-        print(f"  ❌ Erreur envoi email : {e}")
+        print(f"   Erreur envoi email : {e}")
         return False
 
 
@@ -67,7 +67,7 @@ def notifier_nouvelles_versions(rapport: str) -> bool:
     versions de LLMs sont détectées.
     """
     date_str = datetime.now().strftime("%d/%m/%Y")
-    sujet = f"🆕 Wealins Benchmark — Nouvelles versions LLM détectées ({date_str})"
+    sujet = f" Wealins Benchmark — Nouvelles versions LLM détectées ({date_str})"
 
     corps = f"""Bonjour,
 
@@ -92,14 +92,14 @@ def notifier_resultats(classement_texte: str, date_run: str) -> bool:
     """
     Envoie les résultats d'un run terminé.
     """
-    sujet = f"📊 Wealins Benchmark — Résultats du {date_run}"
+    sujet = f" Wealins Benchmark — Résultats du {date_run}"
 
     corps = f"""Bonjour,
 
 Le benchmark mensuel/trimestriel Wealins LLM s'est
 terminé avec succès le {date_run}.
 
-🏆 CLASSEMENT FINAL
+ CLASSEMENT FINAL
 {classement_texte}
 
 Le dashboard complet est disponible pour explorer
@@ -118,14 +118,14 @@ Wealins LLM Benchmark — Notification automatique
 # ============================================================
 
 if __name__ == "__main__":
-    print("\n🧪 Test d'envoi d'email...\n")
+    print("\n Test d'envoi d'email...\n")
 
     succes = envoyer_email(
-        sujet="🧪 Test — Wealins LLM Benchmark",
+        sujet=" Test — Wealins LLM Benchmark",
         corps="Ceci est un email de test du système de notification."
     )
 
     if succes:
-        print("\n✅ Test réussi — vérifie ta boîte mail !")
+        print("\n Test réussi — vérifie ta boîte mail !")
     else:
-        print("\n❌ Test échoué — vérifie la configuration .env")
+        print("\n Test échoué — vérifie la configuration .env")

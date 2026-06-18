@@ -55,7 +55,7 @@ def decider_run() -> dict:
         }
     """
     print("\n" + "="*55)
-    print("🗓️  DÉCISION : LANCER UN RUN ?")
+    print("  DÉCISION : LANCER UN RUN ?")
     print("="*55)
 
     # 1. Vérifie les nouvelles versions
@@ -63,7 +63,7 @@ def decider_run() -> dict:
     rapport = generer_rapport_detection(nouvelles_versions)
 
     if nouvelles_versions:
-        print("\n  ✅ DÉCISION : RUN (nouvelle(s) version(s) détectée(s))")
+        print("\n   DÉCISION : RUN (nouvelle(s) version(s) détectée(s))")
         return {
             "lancer_run": True,
             "raison": "nouvelle_version_detectee",
@@ -76,7 +76,7 @@ def decider_run() -> dict:
     derniere_date = date_dernier_run(historique)
 
     if derniere_date is None:
-        print("\n  ✅ DÉCISION : RUN (aucun historique trouvé)")
+        print("\n   DÉCISION : RUN (aucun historique trouvé)")
         return {
             "lancer_run": True,
             "raison": "aucun_historique",
@@ -87,12 +87,12 @@ def decider_run() -> dict:
     aujourd_hui = datetime.now()
     jours_ecoules = (aujourd_hui - derniere_date).days
 
-    print(f"\n  📅 Dernier run : {derniere_date.strftime('%Y-%m-%d')}")
-    print(f"  📅 Aujourd'hui : {aujourd_hui.strftime('%Y-%m-%d')}")
-    print(f"  ⏱️  Jours écoulés : {jours_ecoules} (seuil : {DELAI_MAX_JOURS})")
+    print(f"\n   Dernier run : {derniere_date.strftime('%Y-%m-%d')}")
+    print(f"   Aujourd'hui : {aujourd_hui.strftime('%Y-%m-%d')}")
+    print(f"    Jours écoulés : {jours_ecoules} (seuil : {DELAI_MAX_JOURS})")
 
     if jours_ecoules >= DELAI_MAX_JOURS:
-        print("\n  ✅ DÉCISION : RUN (run trimestriel de routine)")
+        print("\n   DÉCISION : RUN (run trimestriel de routine)")
         return {
             "lancer_run": True,
             "raison": "run_trimestriel",
@@ -100,7 +100,7 @@ def decider_run() -> dict:
             "nouvelles_versions": {},
         }
 
-    print("\n  ⏭️  DÉCISION : SKIP (rien de nouveau, délai non atteint)")
+    print("\n    DÉCISION : SKIP (rien de nouveau, délai non atteint)")
     return {
         "lancer_run": False,
         "raison": "rien_a_signaler",

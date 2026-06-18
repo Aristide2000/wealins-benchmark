@@ -42,7 +42,7 @@ def pseudonymiser_llms(liste_llm_ids: list) -> dict:
     pseudos = list(string.ascii_uppercase[:len(llms)])
     mapping = {pseudo: llm_id for pseudo, llm_id in zip(pseudos, llms)}
 
-    print(f"🎭 Pseudonymisation : {len(llms)} LLMs anonymisés")
+    print(f" Pseudonymisation : {len(llms)} LLMs anonymisés")
     return mapping
 
 
@@ -145,10 +145,10 @@ def nettoyer_note(note) -> float:
         float : note valide entre 0.0 et 10.0
 
     Exemple :
-        nettoyer_note(8)    → 8.0   ✅
-        nettoyer_note(15)   → 10.0  ⚠️ corrigé
-        nettoyer_note(-2)   → 0.0   ⚠️ corrigé
-        nettoyer_note("abc")→ 0.0   ⚠️ invalide
+        nettoyer_note(8)    → 8.0   
+        nettoyer_note(15)   → 10.0   corrigé
+        nettoyer_note(-2)   → 0.0   corrigé
+        nettoyer_note("abc")→ 0.0    invalide
     """
     try:
         note_float = float(note)
@@ -200,7 +200,7 @@ def formater_classement(scores: dict) -> list:
 def parser_notes_texte(texte: str) -> dict:
     """Parse le format texte A-critere:note"""
     if not texte:
-        print("⚠️  Réponse vide ou None reçue")
+        print("  Réponse vide ou None reçue")
         return {}
 
     notes  = {}
@@ -230,7 +230,7 @@ def parser_notes_texte(texte: str) -> dict:
 def parser_json_llm(texte) -> dict:
     """Parse le format JSON — fallback"""
     if not texte:
-        print("⚠️  Réponse vide ou None reçue")
+        print("  Réponse vide ou None reçue")
         return {}
 
     texte = texte.strip()
@@ -278,7 +278,7 @@ def parser_json_llm(texte) -> dict:
     except (json.JSONDecodeError, ValueError):
         pass
 
-    print(f"❌ Impossible de parser le JSON : {texte[:100]}...")
+    print(f" Impossible de parser le JSON : {texte[:100]}...")
     return {}
 def afficher_progression(etape: str, actuel: int, total: int):
     """
@@ -291,12 +291,12 @@ def afficher_progression(etape: str, actuel: int, total: int):
 
     Exemple :
         afficher_progression("LLMs", 3, 11)
-        → ⏳ LLMs : [████████░░░░░░░░░░░░] 3/11 (27%)
+        →  LLMs : [████████░░░░░░░░░░░░] 3/11 (27%)
     """
     pourcentage = int((actuel / total) * 100)
     barres      = int(pourcentage / 5)
     barre       = "█" * barres + "░" * (20 - barres)
-    print(f"\r⏳ {etape} : [{barre}] {actuel}/{total} ({pourcentage}%)", end="")
+    print(f"\r {etape} : [{barre}] {actuel}/{total} ({pourcentage}%)", end="")
     if actuel == total:
         print()  # retour à la ligne à la fin
 
@@ -306,7 +306,7 @@ def afficher_progression(etape: str, actuel: int, total: int):
 # ============================================================
 
 if __name__ == "__main__":
-    print("\n🧪 Test de utils.py...\n")
+    print("\n Test de utils.py...\n")
 
     # Test pseudonymisation
     llms = ["claude", "gpt", "gemini", "grok", "deepseek"]
@@ -351,4 +351,4 @@ if __name__ == "__main__":
         afficher_progression("Test", i, 5)
         time.sleep(0.3)
 
-    print("\n\n✅ utils.py fonctionne correctement !")
+    print("\n\n utils.py fonctionne correctement !")

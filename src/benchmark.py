@@ -12,11 +12,11 @@ Ordre d'exécution :
 6. Sauvegarde les résultats
 
 Utilise :
-- questions.py     → les 10 questions + critères
-- src/llm_clients  → connexion aux 11 LLMs
-- src/utils        → pseudonymisation
-- src/evaluator    → jury tournant + scores
-- src/loader       → sauvegarde
+- questions.py     : les 10 questions + critères
+- src/llm_clients  : connexion aux 11 LLMs
+- src/utils        : pseudonymisation
+- src/evaluator    : jury tournant + scores
+- src/loader       : sauvegarde
 """
 
 from datetime import datetime
@@ -52,7 +52,7 @@ def collecter_reponses() -> dict:
         }
     """
     print("\n" + "="*55)
-    print("📤 PHASE 1 — COLLECTE DES RÉPONSES")
+    print(" PHASE 1 — COLLECTE DES RÉPONSES")
     print("="*55)
 
     reponses     = {}
@@ -60,7 +60,7 @@ def collecter_reponses() -> dict:
     op_actuelle  = 0
 
     for llm_id, config in LLM_CONFIG.items():
-        print(f"\n  🤖 {config['nom']} ({config['modele']})")
+        print(f"\n   {config['nom']} ({config['modele']})")
         reponses[llm_id] = {}
 
         for q in QUESTIONS:
@@ -80,9 +80,9 @@ Réponse :"""
             reponses[llm_id][str(q["id"])] = reponse
 
             if reponse.startswith("ERREUR"):
-                print("❌")
+                print("ça ne marche pas !")
             else:
-                print("✅")
+                print("ça marche !")
 
             # Barre de progression
             op_actuelle += 1
@@ -92,7 +92,7 @@ Réponse :"""
                 total_ops
             )
 
-    print(f"\n\n  ✅ {len(reponses)} LLMs ont répondu !")
+    print(f"\n\n  {len(reponses)} LLMs ont répondu !")
     return reponses
 
 
@@ -117,7 +117,7 @@ def pseudonymiser_reponses(reponses: dict) -> tuple:
             {"A": "claude", "B": "gpt"...}
     """
     print("\n" + "="*55)
-    print("🎭 PHASE 2 — PSEUDONYMISATION")
+    print(" PHASE 2 — PSEUDONYMISATION")
     print("="*55)
 
     # Génère le mapping aléatoire
@@ -132,8 +132,8 @@ def pseudonymiser_reponses(reponses: dict) -> tuple:
     # Mélange l'ordre pour chaque question
     reponses_anonymes = melanger_reponses(reponses_anonymes)
 
-    print(f"  ✅ {len(mapping_secret)} LLMs pseudonymisés")
-    print(f"  🔒 Mapping gardé secret jusqu'à la fin")
+    print(f"  {len(mapping_secret)} LLMs pseudonymisés")
+    print(f"  Mapping gardé secret jusqu'à la fin")
 
     return reponses_anonymes, mapping_secret
 
@@ -150,7 +150,7 @@ def afficher_classement(scores: dict):
         scores (dict) : résultats calculés par evaluator.py
     """
     print("\n" + "="*55)
-    print("🏆 CLASSEMENT FINAL")
+    print(" CLASSEMENT FINAL")
     print("="*55)
 
     # Trie du meilleur au moins bon
@@ -191,13 +191,13 @@ def lancer_benchmark():
         dict : tous les scores finaux
     """
     # En-tête
-    print("\n" + "🚀 " * 18)
+    print("\n" + "- " * 18)
     print("  WEALINS LLM BENCHMARK — Démarrage")
     print(f"  Date : {datetime.now().strftime('%d/%m/%Y à %H:%M')}")
     print(f"  LLMs : {len(LLM_CONFIG)}")
     print(f"  Questions : {len(QUESTIONS)}")
     print(f"  Critères  : {len(CRITERES)}")
-    print("🚀 " * 18)
+    print("- " * 18)
 
     # ── Phase 1 : Réponses ──────────────────────────────
     reponses = collecter_reponses()
@@ -228,9 +228,9 @@ def lancer_benchmark():
     # ── Phase 6 : Affichage classement ──────────────────
     afficher_classement(scores)
 
-    print(f"\n  ✅ Benchmark terminé !")
-    print(f"  📁 Résultats sauvegardés : {fichier}")
-    print(f"  🌐 Lance le dashboard : streamlit run dashboard.py\n")
+    print(f"\n  Benchmark terminé !")
+    print(f"  Résultats sauvegardés : {fichier}")
+    print(f"  Lance le dashboard : streamlit run dashboard.py\n")
 
     return scores
 
@@ -240,12 +240,12 @@ def lancer_benchmark():
 # ============================================================
 
 if __name__ == "__main__":
-    print("\n🧪 Test de benchmark.py...")
+    print("\n Test de benchmark.py...")
     print(f"  Chef d'orchestre prêt !")
     print(f"  {len(LLM_CONFIG)} LLMs configurés")
     print(f"  {len(QUESTIONS)} questions prêtes")
     print(f"\n  Pour lancer le benchmark complet :")
     print(f"  → python -m src.benchmark")
-    print(f"\n  ⚠️  Attention : le benchmark complet")
+    print(f"\n  [!]  Attention : le benchmark complet")
     print(f"     prend environ 30-60 minutes")
     print(f"     et consomme des crédits API !\n")

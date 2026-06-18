@@ -5,10 +5,10 @@ Interface web interactive — Wealins LLM Benchmark
 Lancé avec : streamlit run dashboard.py
 
 Pages :
-1. 🏆 Classement général
-2. 📊 Analyse par critère
-3. 💬 Réponses complètes
-4. 📈 Évolution temporelle
+1. Classement général
+2. Analyse par critère
+3. Réponses complètes
+4. Évolution temporelle
 """
 
 import streamlit as st
@@ -30,7 +30,6 @@ from src.utils import formater_classement
 
 st.set_page_config(
     page_title="Wealins — LLM Benchmark",
-    page_icon="🏆",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -88,17 +87,17 @@ def charger_hist():
 # ============================================================
 
 with st.sidebar:
-    st.markdown("## ⚙️ À propos")
+    st.markdown("##  À propos")
     st.markdown("---")
 
-    st.markdown("### 🎯 Méthodologie")
+    st.markdown("###  Méthodologie")
     st.caption(
         "Chaque LLM répond à 10 questions métier, "
         "puis est évalué en aveugle par les autres "
         "LLMs sur 8 critères pondérés."
     )
 
-    st.markdown("### ⚖️ Pondération des critères")
+    st.markdown("###  Pondération des critères")
     for c_id, c_info in CRITERES.items():
         pct = int(c_info["poids"] * 100)
         st.markdown(f"- **{c_info['label']}** : {pct}%")
@@ -106,14 +105,14 @@ with st.sidebar:
     st.markdown("---")
 
     # Bouton relancer
-    st.markdown("### 🔄 Nouveau run")
-    if st.button("🚀 Lancer benchmark", type="primary",
+    st.markdown("###  Nouveau run")
+    if st.button(" Lancer benchmark", type="primary",
                  use_container_width=True):
         st.info("Lance : python -m src.benchmark")
 
     st.markdown("---")
-    st.caption("📅 Wealins LLM Benchmark v1.0")
-    st.caption("🔄 Run trimestriel (tous les 3 mois)")
+    st.caption(" Wealins LLM Benchmark v1.0")
+    st.caption(" Run trimestriel (tous les 3 mois)")
 
 # Poids fixes (issus de questions.py)
 poids = {c_id: c_info["poids"] for c_id, c_info in CRITERES.items()}
@@ -125,7 +124,7 @@ poids = {c_id: c_info["poids"] for c_id, c_info in CRITERES.items()}
 st.markdown("""
 <div class="header">
     <h1 style="margin:0;font-size:2rem;color:white;">
-        🏆 Wealins — LLM Benchmark
+         Wealins — LLM Benchmark
     </h1>
     <p style="margin:8px 0 0 0;color:rgba(255,255,255,0.8)">
         Veille technologique · 8 LLMs ·
@@ -144,11 +143,11 @@ historique = charger_hist()
 
 # Si pas encore de données → message d'attente
 if not donnees:
-    st.warning("⚠️ Aucun résultat trouvé.")
+    st.warning(" Aucun résultat trouvé.")
     st.info("Lance d'abord : python -m src.benchmark")
 
     # Affiche quand même les questions
-    st.markdown("### 📋 Questions configurées")
+    st.markdown("###  Questions configurées")
     for q in QUESTIONS:
         st.markdown(f"**Q{q['id']}** — {q['theme']}")
         st.caption(q['question'])
@@ -165,14 +164,14 @@ classement     = formater_classement(scores)
 
 c1, c2, c3, c4 = st.columns(4)
 with c1:
-    st.metric("📅 Dernier run", date_benchmark)
+    st.metric(" Dernier run", date_benchmark)
 with c2:
-    st.metric("🤖 LLMs testés", len(scores))
+    st.metric(" LLMs testés", len(scores))
 with c3:
-    st.metric("❓ Questions", len(QUESTIONS))
+    st.metric(" Questions", len(QUESTIONS))
 with c4:
     top1 = classement[0]["nom"] if classement else "N/A"
-    st.metric("🏅 Meilleur LLM", top1)
+    st.metric(" Meilleur LLM", top1)
 
 st.markdown("---")
 
@@ -182,10 +181,10 @@ st.markdown("---")
 # ============================================================
 
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🏆 Classement",
-    "📊 Par critère",
-    "💬 Réponses",
-    "📈 Évolution"
+    " Classement",
+    " Par critère",
+    " Réponses",
+    " Évolution"
 ])
 
 
@@ -194,7 +193,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 # ──────────────────────────────────────
 
 with tab1:
-    st.markdown("### 🏆 Classement général")
+    st.markdown("###  Classement général")
 
     # Recalcule avec poids personnalisés
     def recalc(criteres_moyens, poids_perso):
@@ -226,7 +225,7 @@ with tab1:
 
     # Podium Top 3
     col1, col2, col3 = st.columns(3)
-    medailles = ["🥇", "🥈", "🥉"]
+    medailles = ["1", "2", "3"]
     cols      = [col1, col2, col3]
 
     for i, col in enumerate(cols):
@@ -284,7 +283,7 @@ with tab1:
     st.plotly_chart(fig, use_container_width=True)
 
     # Tableau
-    st.markdown("### 📋 Tableau détaillé")
+    st.markdown("###  Tableau détaillé")
     df_table = df[["LLM", "Provider", "Modèle", "Score"]].copy()
     df_table.index = range(1, len(df_table) + 1)
     st.dataframe(df_table, use_container_width=True)
@@ -295,7 +294,7 @@ with tab1:
 # ──────────────────────────────────────
 
 with tab2:
-    st.markdown("### 📊 Scores par critère")
+    st.markdown("###  Scores par critère")
 
     # Radar chart
     categories = [v["label"] for v in CRITERES.values()]
@@ -329,7 +328,7 @@ with tab2:
     st.plotly_chart(fig_radar, use_container_width=True)
 
     # Heatmap
-    st.markdown("### 🌡️ Carte de chaleur")
+    st.markdown("###  Carte de chaleur")
     heatmap = {}
     for llm_id, data in scores.items():
         heatmap[data["nom"]] = {
@@ -359,7 +358,7 @@ with tab2:
 # ──────────────────────────────────────
 
 with tab3:
-    st.markdown("### 💬 Réponses complètes")
+    st.markdown("###  Réponses complètes")
 
     col_q, col_l = st.columns(2)
     with col_q:
@@ -430,11 +429,11 @@ with tab3:
 # ──────────────────────────────────────
 
 with tab4:
-    st.markdown("### 📈 Évolution dans le temps")
+    st.markdown("###  Évolution dans le temps")
 
     if len(historique) < 2:
         st.info("""
-        📅 L'historique s'enrichit à chaque run !
+         L'historique s'enrichit à chaque run !
 
         **Comment ça fonctionne :**
         - Le benchmark tourne tous les 3 mois

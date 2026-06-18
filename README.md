@@ -254,10 +254,10 @@ Le dashboard Streamlit propose 4 onglets :
 
 | Onglet | Contenu |
 |---|---|
-| 🏆 Classement | Podium des 3 meilleurs LLM, graphique en barres, tableau détaillé |
-| 📊 Par critère | Radar chart comparatif, carte de chaleur par critère |
-| 💬 Réponses | Consultation des réponses complètes par LLM et par question, avec scores détaillés |
-| 📈 Évolution | Suivi des scores dans le temps (alimenté à chaque nouveau run) |
+|  Classement | Podium des 3 meilleurs LLM, graphique en barres, tableau détaillé |
+|  Par critère | Radar chart comparatif, carte de chaleur par critère |
+|  Réponses | Consultation des réponses complètes par LLM et par question, avec scores détaillés |
+|  Évolution | Suivi des scores dans le temps (alimenté à chaque nouveau run) |
 
 Les pondérations des critères sont fixes et affichées à titre informatif dans la barre latérale.
 

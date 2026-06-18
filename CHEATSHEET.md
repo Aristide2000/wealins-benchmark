@@ -1,13 +1,13 @@
 # CHEATSHEET.md — Pense-bête quotidien
 
 Mémo rapide pour les actions courantes sur le projet Wealins LLM Benchmark.
-⚠️ Pour les explications détaillées, voir `NOTES.md`. Ce document est volontairement court.
+ Pour les explications détaillées, voir `NOTES.md`. Ce document est volontairement court.
 
-> ⚠️ **Important** : tout le projet vit sur la branche **`dev`**. La branche `main` n'a jamais été utilisée — ne pas y commiter par erreur. Toujours vérifier avec `git branch` (l'étoile `*` indique la branche active).
+> **Important** : tout le projet vit sur la branche **`dev`**. La branche `main` n'a jamais été utilisée — ne pas y commiter par erreur. Toujours vérifier avec `git branch` (l'étoile `*` indique la branche active).
 
 ---
 
-## 🔄 Reprendre le projet (à chaque ouverture)
+##  Reprendre le projet (à chaque ouverture)
 
 ```cmd
 cd C:\Users\pango\OneDrive\Bureau\Projet_personnel\wealins-benchmark
@@ -19,7 +19,7 @@ Tu sais que le venv est actif quand tu vois `(venv-wealins)` au début de la lig
 
 ---
 
-## 🌿 Vérifier où on en est
+##  Vérifier où on en est
 
 ```cmd
 git branch          → confirme qu'on est sur * dev
@@ -29,7 +29,7 @@ git log --oneline -5 → derniers commits
 
 ---
 
-## 💾 Sauvegarder ses modifications
+##  Sauvegarder ses modifications
 
 ```cmd
 git add .
@@ -39,7 +39,7 @@ git push origin dev
 
 ---
 
-## ▶️ Lancer le projet
+## ▶ Lancer le projet
 
 ```cmd
 # Run complet manuel (≈ 45 min, consomme du budget OpenRouter)
@@ -59,7 +59,7 @@ python -c "from run import run_avec_decision; run_avec_decision()"
 
 ---
 
-## 💰 Avant tout run complet — vérifier le budget
+##  Avant tout run complet — vérifier le budget
 
 ```
 https://openrouter.ai/settings/credits
@@ -69,7 +69,7 @@ Un run = ~140 appels API (~0,50 à 1 €).
 
 ---
 
-## 🤖 Relancer GitHub Actions manuellement
+##  Relancer GitHub Actions manuellement
 
 ```
 1. https://github.com/Aristide2000/wealins-benchmark/actions
@@ -83,7 +83,7 @@ Cron automatique : tous les lundis 6h UTC (le scheduler décide ensuite si un ru
 
 ---
 
-## 🌐 Liens utiles
+##  Liens utiles
 
 | Quoi | Lien |
 |---|---|
@@ -98,7 +98,7 @@ Cron automatique : tous les lundis 6h UTC (le scheduler décide ensuite si un ru
 
 ---
 
-## 🆘 Dépannage rapide — erreurs déjà vues
+##  Dépannage rapide — erreurs déjà vues
 
 | Erreur | Cause probable | Solution |
 |---|---|---|
@@ -112,7 +112,7 @@ Cron automatique : tous les lundis 6h UTC (le scheduler décide ensuite si un ru
 
 ---
 
-## ✅ Checklist avant de fermer une session de travail
+##  Checklist avant de fermer une session de travail
 
 ```
 □ git status → rien d'important en attente

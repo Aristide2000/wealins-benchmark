@@ -1,7 +1,7 @@
 """
 src/llm_clients.py
 ==================
-Connexion aux 11 LLMs — TOUT via OpenRouter
+Connexion aux 7 LLMs — TOUT via OpenRouter
 Une seule clé API pour tous !
 """
 
@@ -98,7 +98,7 @@ def appeler_llm(llm_id: str, prompt: str) -> str:
         reponse = _appeler_openrouter(modele, prompt)
         return reponse
     except Exception as e:
-        print(f"\n  ❌ Erreur {nom} : {e}")
+        print(f"\n Erreur {nom} : {e}")
         return f"ERREUR: {str(e)}"
 
 
@@ -107,6 +107,6 @@ def appeler_llm(llm_id: str, prompt: str) -> str:
 # ============================================================
 
 if __name__ == "__main__":
-    print(f"\n🧪 {len(LLM_CONFIG)} LLMs configurés — tous via OpenRouter\n")
+    print(f"\n {len(LLM_CONFIG)} LLMs configurés — tous via OpenRouter\n")
     for llm_id, config in LLM_CONFIG.items():
-        print(f"  → {config['nom']:15} | {config['modele']}")
+        print(f"  qui donne {config['nom']:15} | {config['modele']}")

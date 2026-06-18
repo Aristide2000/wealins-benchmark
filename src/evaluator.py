@@ -1,7 +1,7 @@
 """
 src/evaluator.py
 ================
-Cerveau de la notation — Jury tournant en aveugle.
+Cerveau de la notation Jury tournant en aveugle.
 
 Étapes :
 1. Reçoit les réponses anonymisées (A, B, C...)
@@ -104,7 +104,7 @@ def jury_tournant(
         }
     """
     print("\n" + "="*55)
-    print("⚖️  JURY TOURNANT — Évaluation en aveugle")
+    print(" JURY TOURNANT — Évaluation en aveugle")
     print("="*55)
 
     # Mapping inverse : llm_id → pseudo
@@ -115,14 +115,14 @@ def jury_tournant(
     op_actuelle  = 0
 
     for q in QUESTIONS:
-        print(f"\n  📋 Q{q['id']} — {q['theme']}")
+        print(f"\n  Q{q['id']} — {q['theme']}")
         toutes_notes[q["id"]] = {}
 
         for llm_juge_id, config_juge in LLM_CONFIG.items():
             pseudo_juge = pseudo_par_llm.get(llm_juge_id, "?")
             nom_juge    = config_juge["nom"]
 
-            print(f"     🧑‍⚖️  Juge : {nom_juge}...", end=" ")
+            print(f"    Juge : {nom_juge}...", end=" ")
 
             # Construit le prompt
             prompt = construire_prompt_notation(
@@ -151,9 +151,9 @@ def jury_tournant(
                             if c in CRITERES
                         }
                 toutes_notes[q["id"]][llm_juge_id] = notes_propres
-                print("✅")
+                print(" JSON reçu et parsé !")
             else:
-                print("❌ JSON invalide")
+                print(" JSON invalide")
                 toutes_notes[q["id"]][llm_juge_id] = {}
 
             # Barre de progression globale
@@ -195,7 +195,7 @@ def calculer_scores_finaux(
         }
     """
     print("\n" + "="*55)
-    print("📊 CALCUL DES SCORES FINAUX")
+    print("CALCUL DES SCORES FINAUX")
     print("="*55)
 
     # Initialise les scores pour chaque LLM
@@ -251,7 +251,7 @@ def calculer_scores_finaux(
         # Supprime les listes brutes
         del data["notes_brutes"]
 
-        print(f"  {data['nom']:15} → {score_global}/10")
+        print(f"  {data['nom']:15} qui donne {score_global}/10")
 
     return scores
 
@@ -261,7 +261,7 @@ def calculer_scores_finaux(
 # ============================================================
 
 if __name__ == "__main__":
-    print("\n🧪 Test de evaluator.py...")
+    print("\n Test de evaluator.py...")
 
     # Simule des données pour tester
     reponses_test = {
@@ -277,7 +277,7 @@ if __name__ == "__main__":
         reponses_test,
         "A"
     )
-    print(f"\n  ✅ Prompt construit ({len(prompt)} caractères)")
+    print(f"\n   Prompt construit ({len(prompt)} caractères)")
     print(f"  Aperçu : {prompt[:100]}...")
 
-    print("\n✅ evaluator.py fonctionne correctement !")
+    print("\n   evaluator.py fonctionne correctement !")

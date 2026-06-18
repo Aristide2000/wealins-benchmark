@@ -19,7 +19,7 @@ def recuperer_tous_les_modeles() -> list:
         response.raise_for_status()
         return response.json().get("data", [])
     except Exception as e:
-        print(f"⚠️  Impossible de récupérer les modèles : {e}")
+        print(f"  Impossible de récupérer les modèles : {e}")
         return []
 
 
@@ -47,7 +47,7 @@ def detecter_nouvelles_versions() -> dict:
 
     tous_modeles = recuperer_tous_les_modeles()
     if not tous_modeles:
-        print("  ⚠️  Aucune donnée récupérée")
+        print("    Aucune donnée récupérée")
         return {}
 
     # Index par id pour retrouver rapidement
@@ -61,7 +61,7 @@ def detecter_nouvelles_versions() -> dict:
 
         infos_actuel = modeles_par_id.get(modele_actuel)
         if not infos_actuel:
-            print(f"\n  ⚠️  {nom} : modèle actuel introuvable sur OpenRouter")
+            print(f"\n    {nom} : modèle actuel introuvable sur OpenRouter")
             continue
 
         date_actuel = infos_actuel.get("created", 0)
@@ -93,11 +93,11 @@ def detecter_nouvelles_versions() -> dict:
                 "nouveau":      plus_recent["id"],
                 "date_nouveau": datetime.fromtimestamp(plus_recent.get("created", 0)).strftime("%Y-%m-%d"),
             }
-            print(f"\n  🆕 {nom}")
+            print(f"\n   {nom}")
             print(f"     Actuel  : {modele_actuel}")
             print(f"     Nouveau : {plus_recent['id']} (sorti le {nouvelles_versions[llm_id]['date_nouveau']})")
         else:
-            print(f"\n  ✅ {nom} ({modele_actuel}) — version la plus récente")
+            print(f"\n   {nom} ({modele_actuel}) — version la plus récente")
 
     print("\n" + "="*55)
     return nouvelles_versions
@@ -107,11 +107,11 @@ def generer_rapport_detection(resultats: dict) -> str:
     """Génère un texte récapitulatif pour le mail/rapport."""
     if not resultats:
         return (
-            "✅ Tous les LLMs utilisés sont à jour — "
+            " Tous les LLMs utilisés sont à jour — "
             "aucune nouvelle version détectée."
         )
 
-    lignes = ["🆕 Nouvelles versions disponibles :\n"]
+    lignes = [" Nouvelles versions disponibles :\n"]
     for llm_id, info in resultats.items():
         lignes.append(
             f"\n• {info['nom']} : {info['actuel']} "

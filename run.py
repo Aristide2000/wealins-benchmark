@@ -29,19 +29,19 @@ def run_avec_decision():
     decision = decider_run()
 
     if not decision["lancer_run"]:
-        print("\n⏭️  Aucun run nécessaire pour le moment.")
+        print("\n  Aucun run nécessaire pour le moment.")
         return
 
     # Notifie si nouvelles versions détectées
     if decision["raison"] == "nouvelle_version_detectee":
-        print("\n📧 Envoi de la notification de détection...")
+        print("\n Envoi de la notification de détection...")
         notifier_nouvelles_versions(decision["rapport_detection"])
 
     # Lance le benchmark
     lancer_benchmark()
 
     # Notifie avec les résultats
-    print("\n📧 Envoi de la notification des résultats...")
+    print("\n Envoi de la notification des résultats...")
     donnees = charger_dernier_benchmark()
     if donnees:
         scores     = donnees.get("scores", {})
@@ -58,4 +58,5 @@ def run_avec_decision():
 if __name__ == "__main__":
     # Mode direct : lance toujours le benchmark
     # (utile pour tester manuellement)
+    print("\n  Lancement du benchmark...")
     lancer_benchmark()
