@@ -250,6 +250,10 @@ with tab1:
                                 color:#1B3A6B">
                         {llm['Score']}/10
                     </div>
+                    <div style="font-size:0.85rem;
+                                color:#888;">
+                        ± 0.3 (variabilité estimée)
+                    </div>
                     <div style="color:#888;font-size:0.8rem">
                         {llm['Provider']}
                     </div>
@@ -285,6 +289,9 @@ with tab1:
     # Tableau
     st.markdown("###  Tableau détaillé")
     df_table = df[["LLM", "Provider", "Modèle", "Score"]].copy()
+    df_table["Intervalle"] = df_table["Score"].apply(
+        lambda x: f"{round(x-0.3,2)} – {round(x+0.3,2)}"
+    )
     df_table.index = range(1, len(df_table) + 1)
     st.dataframe(df_table, use_container_width=True)
 
