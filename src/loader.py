@@ -68,24 +68,41 @@ def charger_dernier_benchmark() -> dict:
 
 def charger_historique() -> list:
     """
-    Charge l'historique de tous les benchmarks passés.
-    Retourne une liste vide si pas encore d'historique.
-
-    Exemple d'utilisation :
-        from src.loader import charger_historique
-        historique = charger_historique()
-        print(f"{len(historique)} benchmarks dans l'historique")
+    Reconstruit l'historique depuis tous les fichiers
+    benchmark_*.json présents dans results/.
+    Plus de conflit Git — historique.json n'est plus versionné.
     """
-    chemin = os.path.join(DOSSIER_RESULTS, "historique.json")
+    fichiers = sorted([
+        f for f in os.listdir(DOSSIER_RESULTS)
+        if f.startswith("benchmark_") and f.endswith(".json")
+    ])
 
-    if not os.path.exists(chemin):
+    if not fichiers:
         print("  Pas encore d'historique")
         return []
 
-    with open(chemin, "r", encoding="utf-8") as f:
-        historique = json.load(f)
+    historique = []
+    for fichier in fichiers:
+        chemin = os.path.join(DOSSIER_RESULTS, fichier)
+        try:
+            with open(chemin, "r", encoding="utf-8") as f:
+                donnees = json.load(f)
+            scores = donnees.get("scores", {})
+            classement = sorted(
+                [{"llm": v["nom"], "score": v["score_global"]}
+                 for v in scores.values()],
+                key=lambda x: x["score"],
+                reverse=True
+            )
+            historique.append({
+                "date":       donnees.get("date", fichier),
+                "fichier":    chemin,
+                "classement": classement
+            })
+        except Exception:
+            continue
 
-    print(f" Historique chargé — {len(historique)} benchmarks")
+    print(f" Historique reconstruit — {len(historique)} benchmarks")
     return historique
 
 
