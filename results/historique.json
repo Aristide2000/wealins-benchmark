@@ -402,70 +402,36 @@
     ]
   },
   {
-    "date": "2026-06-19",
-    "fichier": "results\\benchmark_2026-06-19.json",
+    "date": "2026-06-22",
+    "fichier": "results/benchmark_2026-06-22.json",
     "classement": [
       {
         "llm": "Gemini",
-        "score": 7.62
+        "score": 7.94
       },
       {
-        "llm": "Qwen",
-        "score": 7.5
+        "llm": "Command R+",
+        "score": 7.94
       },
       {
-        "llm": "GPT",
-        "score": 7.32
+        "llm": "Gemma 3",
+        "score": 7.71
       },
       {
         "llm": "Claude",
+        "score": 7.35
+      },
+      {
+        "llm": "Qwen",
+        "score": 7.33
+      },
+      {
+        "llm": "GPT",
         "score": 7.28
       },
       {
-        "llm": "Gemma 3",
+        "llm": "Llama 3.3",
         "score": 7.15
-      },
-      {
-        "llm": "Llama 3.3",
-        "score": 7.05
-      },
-      {
-        "llm": "Command R+",
-        "score": 6.31
-      }
-    ]
-  },
-  {
-    "date": "2026-06-24",
-    "fichier": "results\\benchmark_2026-06-24.json",
-    "classement": [
-      {
-        "llm": "Command R+",
-        "score": 7.99
-      },
-      {
-        "llm": "Gemini",
-        "score": 7.92
-      },
-      {
-        "llm": "Gemma 3",
-        "score": 7.67
-      },
-      {
-        "llm": "Claude",
-        "score": 7.42
-      },
-      {
-        "llm": "GPT",
-        "score": 7.36
-      },
-      {
-        "llm": "Llama 3.3",
-        "score": 7.36
-      },
-      {
-        "llm": "Qwen",
-        "score": 3.24
       }
     ]
   }
