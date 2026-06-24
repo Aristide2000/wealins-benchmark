@@ -400,5 +400,73 @@
         "score": 7.41
       }
     ]
+  },
+  {
+    "date": "2026-06-19",
+    "fichier": "results\\benchmark_2026-06-19.json",
+    "classement": [
+      {
+        "llm": "Gemini",
+        "score": 7.62
+      },
+      {
+        "llm": "Qwen",
+        "score": 7.5
+      },
+      {
+        "llm": "GPT",
+        "score": 7.32
+      },
+      {
+        "llm": "Claude",
+        "score": 7.28
+      },
+      {
+        "llm": "Gemma 3",
+        "score": 7.15
+      },
+      {
+        "llm": "Llama 3.3",
+        "score": 7.05
+      },
+      {
+        "llm": "Command R+",
+        "score": 6.31
+      }
+    ]
+  },
+  {
+    "date": "2026-06-24",
+    "fichier": "results\\benchmark_2026-06-24.json",
+    "classement": [
+      {
+        "llm": "Command R+",
+        "score": 7.99
+      },
+      {
+        "llm": "Gemini",
+        "score": 7.92
+      },
+      {
+        "llm": "Gemma 3",
+        "score": 7.67
+      },
+      {
+        "llm": "Claude",
+        "score": 7.42
+      },
+      {
+        "llm": "GPT",
+        "score": 7.36
+      },
+      {
+        "llm": "Llama 3.3",
+        "score": 7.36
+      },
+      {
+        "llm": "Qwen",
+        "score": 3.24
+      }
+    ]
   }
 ]
