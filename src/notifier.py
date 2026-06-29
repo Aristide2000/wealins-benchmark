@@ -106,6 +106,9 @@ Le dashboard complet est disponible pour explorer
 les résultats en détail (réponses, scores par critère,
 évolution dans le temps).
 
+Dashboard complet :
+https://wealins-benchmark-nomhgcjhfdyvgzpxkz8cfn.streamlit.app/
+
 ---
 Wealins LLM Benchmark — Notification automatique
 """

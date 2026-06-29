@@ -3,7 +3,7 @@ name: Wealins LLM Benchmark
 on:
   schedule:
     # Tous les lundis à 6h00 UTC
-    - cron: '0 6 * * 1'
+    - cron: '0 4 * * 1'
   workflow_dispatch:  # permet de lancer manuellement depuis GitHub
 
 jobs:
