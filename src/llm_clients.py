@@ -36,7 +36,7 @@ LLM_CONFIG = {
     },
     "qwen": {
         "nom":      "Qwen",
-        "modele":   "qwen/qwen3-32b",
+        "modele":   "qwen/qwen3.7-plus",
         "provider": "OpenRouter",
         "couleur":  "#EC4899",
     },
