@@ -182,57 +182,105 @@ def afficher_classement(scores: dict):
 # FONCTION PRINCIPALE
 # ============================================================
 
+# ============================================================
+# CONSTANTE — NOMBRE DE RUNS
+# ============================================================
+
+NB_RUNS = 5
+
+
+# ============================================================
+# FONCTION PRINCIPALE
+# ============================================================
+
 def lancer_benchmark():
     """
-    Lance le benchmark complet de A à Z.
-    C'est la seule fonction à appeler !
-
-    Retourne :
-        dict : tous les scores finaux
+    Lance le benchmark complet NB_RUNS fois
+    et retourne la moyenne des scores.
     """
-    # En-tête
     print("\n" + "- " * 18)
     print("  WEALINS LLM BENCHMARK — Démarrage")
-    print(f"  Date : {datetime.now().strftime('%d/%m/%Y à %H:%M')}")
-    print(f"  LLMs : {len(LLM_CONFIG)}")
+    print(f"  Date      : {datetime.now().strftime('%d/%m/%Y à %H:%M')}")
+    print(f"  LLMs      : {len(LLM_CONFIG)}")
     print(f"  Questions : {len(QUESTIONS)}")
     print(f"  Critères  : {len(CRITERES)}")
+    print(f"  Runs      : {NB_RUNS}")
     print("- " * 18)
 
-    # ── Phase 1 : Réponses ──────────────────────────────
-    reponses = collecter_reponses()
+    tous_les_scores = []
 
-    # ── Phase 2 : Pseudonymisation ──────────────────────
-    reponses_anonymes, mapping_secret = pseudonymiser_reponses(reponses)
+    for num_run in range(1, NB_RUNS + 1):
+        print(f"\n\n>> RUN {num_run}/{NB_RUNS}")
+        print("=" * 55)
 
-    # ── Phase 3 : Jury tournant ─────────────────────────
-    toutes_notes = jury_tournant(reponses_anonymes, mapping_secret)
+        # Phase 1 : Réponses
+        reponses = collecter_reponses()
 
-    # ── Phase 4 : Calcul scores ─────────────────────────
-    scores = calculer_scores_finaux(toutes_notes, mapping_secret)
+        # Phase 2 : Pseudonymisation
+        reponses_anonymes, mapping_secret = pseudonymiser_reponses(reponses)
 
-    # ── Phase 5 : Sauvegarde ────────────────────────────
+        # Phase 3 : Jury tournant
+        toutes_notes = jury_tournant(reponses_anonymes, mapping_secret)
+
+        # Phase 4 : Calcul scores
+        scores = calculer_scores_finaux(toutes_notes, mapping_secret)
+
+        tous_les_scores.append(scores)
+        print(f"\n  >> Run {num_run} terminé.")
+
+    # ── Calcul de la moyenne sur NB_RUNS ────────────────
+    print("\n" + "=" * 55)
+    print(f"  CALCUL DE LA MOYENNE ({NB_RUNS} runs)")
+    print("=" * 55)
+
+    scores_moyens = {}
+    for llm_id in tous_les_scores[0].keys():
+        # Moyenne du score global
+        score_moyen = round(
+            sum(r[llm_id]["score_global"] for r in tous_les_scores) / NB_RUNS,
+            2
+        )
+        # Moyenne par critère
+        criteres_moyens = {}
+        for c_id in tous_les_scores[0][llm_id]["scores_criteres_moyens"]:
+            criteres_moyens[c_id] = round(
+                sum(
+                    r[llm_id]["scores_criteres_moyens"].get(c_id, 0)
+                    for r in tous_les_scores
+                ) / NB_RUNS,
+                2
+            )
+        # Conserve les infos non-numériques du premier run
+        scores_moyens[llm_id] = {
+            **tous_les_scores[0][llm_id],
+            "score_global":           score_moyen,
+            "scores_criteres_moyens": criteres_moyens,
+        }
+        print(f"  {scores_moyens[llm_id]['nom']:15} -> {score_moyen}/10")
+
+    # Phase 5 : Sauvegarde (scores moyens)
     donnees_completes = {
-        "scores":          scores,
-        "reponses":        reponses,
-        "mapping_revele":  mapping_secret,
-        "nb_llms":         len(LLM_CONFIG),
-        "nb_questions":    len(QUESTIONS),
-        "criteres":        {
+        "scores":         scores_moyens,
+        "reponses":       reponses,
+        "mapping_revele": mapping_secret,
+        "nb_llms":        len(LLM_CONFIG),
+        "nb_questions":   len(QUESTIONS),
+        "nb_runs":        NB_RUNS,
+        "criteres": {
             k: {"label": v["label"], "poids": v["poids"]}
             for k, v in CRITERES.items()
         }
     }
     fichier = sauvegarder_benchmark(donnees_completes)
 
-    # ── Phase 6 : Affichage classement ──────────────────
-    afficher_classement(scores)
+    # Phase 6 : Affichage classement final
+    afficher_classement(scores_moyens)
 
-    print(f"\n  Benchmark terminé !")
+    print(f"\n  Benchmark terminé ({NB_RUNS} runs) !")
     print(f"  Résultats sauvegardés : {fichier}")
     print(f"  Lance le dashboard : streamlit run dashboard.py\n")
 
-    return scores
+    return scores_moyens
 
 
 # ============================================================
