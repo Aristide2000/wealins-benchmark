@@ -1,48 +1,50 @@
 # CHEATSHEET.md — Pense-bête quotidien
 
 Mémo rapide pour les actions courantes sur le projet Wealins LLM Benchmark.
- Pour les explications détaillées, voir `NOTES.md`. Ce document est volontairement court.
+Pour les explications détaillées, voir `NOTES.md`. Ce document est volontairement court.
 
-> **Important** : tout le projet vit sur la branche **`dev`**. La branche `main` n'a jamais été utilisée — ne pas y commiter par erreur. Toujours vérifier avec `git branch` (l'étoile `*` indique la branche active).
+> ⚠️ **Important** : tout le projet vit sur la branche **`dev`**. La branche `main` n'a jamais été utilisée — ne pas y commiter par erreur. Toujours vérifier avec `git branch` (l'étoile `*` indique la branche active).
 
 ---
 
-##  Reprendre le projet (à chaque ouverture)
+## 🔄 Reprendre le projet (à chaque ouverture)
 
 ```cmd
 cd C:\Users\pango\OneDrive\Bureau\Projet_personnel\wealins-benchmark
 venv-wealins\Scripts\activate
-git pull origin dev
+git pull origin dev --no-edit
 ```
 
 Tu sais que le venv est actif quand tu vois `(venv-wealins)` au début de la ligne.
 
 ---
 
-##  Vérifier où on en est
+## 🌿 Vérifier où on en est
 
 ```cmd
-git branch          → confirme qu'on est sur * dev
+git branch           → confirme qu'on est sur * dev
 git status           → fichiers modifiés / non suivis
 git log --oneline -5 → derniers commits
 ```
 
 ---
 
-##  Sauvegarder ses modifications
+## 💾 Sauvegarder ses modifications
 
 ```cmd
 git add .
 git commit -m "message descriptif (fix:, feat:, docs:, chore:)"
-git push origin dev
+git pull origin dev --no-edit && git push origin dev
 ```
+
+> Toujours faire `git pull` avant `git push` pour éviter le rejet (GitHub Actions commite souvent en arrière-plan).
 
 ---
 
-## ▶ Lancer le projet
+## ▶️ Lancer le projet
 
 ```cmd
-# Run complet manuel (≈ 45 min, consomme du budget OpenRouter)
+# Run complet manuel (5 runs = ~225 min = ~4€)
 python run.py
 
 # Dashboard en local
@@ -50,6 +52,7 @@ streamlit run dashboard.py
 
 # Tester un module isolément
 python -m src.detector      → détecte les nouvelles versions de LLM
+python -m src.updater       → teste et met à jour les modèles automatiquement
 python -m src.scheduler     → simule la décision RUN/SKIP
 python -m src.notifier      → envoie un email de test
 
@@ -59,31 +62,49 @@ python -c "from run import run_avec_decision; run_avec_decision()"
 
 ---
 
-##  Avant tout run complet — vérifier le budget
+## 💰 Avant tout run complet — vérifier le budget
 
 ```
 https://openrouter.ai/settings/credits
 ```
 
-Un run = ~140 appels API (~0,50 à 1 €).
+```
+1 run  = ~140 appels = ~45 min = ~0.80€
+5 runs = ~700 appels = ~225 min = ~4.00€
+→ Avoir au moins 5€ avant de lancer
+```
 
 ---
 
-##  Relancer GitHub Actions manuellement
+## 🤖 Ce que fait le pipeline automatique (lundi 4h UTC)
+
+```
+1. detector.py  → détecte nouveaux modèles
+2. updater.py   → teste + met à jour si fiable,
+                  conserve l'ancien si instable
+3. scheduler.py → décide RUN ou SKIP
+4. benchmark.py → 5 runs + moyenne finale
+5. notifier.py  → email résultats + lien dashboard
+6. git commit   → sauvegarde résultats + llm_clients.py
+```
+
+---
+
+## 🤖 Relancer GitHub Actions manuellement
 
 ```
 1. https://github.com/Aristide2000/wealins-benchmark/actions
 2. "Wealins LLM Benchmark" (à gauche)
 3. Bouton "Run workflow" → branche "dev" → Run workflow
-4. Attendre ~45 min (statut jaune → vert si succès)
-5. Récupérer les résultats en local : git pull origin dev
+4. Attendre ~225 min (statut jaune → vert si succès)
+5. Récupérer les résultats : git pull origin dev --no-edit
 ```
 
-Cron automatique : tous les lundis 6h UTC (le scheduler décide ensuite si un run est vraiment nécessaire).
+Cron automatique : tous les lundis à 4h UTC (6h Luxembourg).
 
 ---
 
-##  Liens utiles
+## 🌐 Liens utiles
 
 | Quoi | Lien |
 |---|---|
@@ -94,29 +115,32 @@ Cron automatique : tous les lundis 6h UTC (le scheduler décide ensuite si un ru
 | Workflow permissions | https://github.com/Aristide2000/wealins-benchmark/settings/actions |
 | Modèles OpenRouter | https://openrouter.ai/models |
 | Crédits OpenRouter | https://openrouter.ai/settings/credits |
-| Streamlit Cloud (mes apps) | https://share.streamlit.io |
+| Streamlit Cloud | https://share.streamlit.io |
 
 ---
 
-##  Dépannage rapide — erreurs déjà vues
+## 🆘 Dépannage rapide
 
-| Erreur | Cause probable | Solution |
+| Erreur | Cause | Solution |
 |---|---|---|
-| `ModuleNotFoundError` sur un fichier de `src/` | Lancé avec `python src/module.py` | Utiliser `python -m src.module` depuis la racine |
-| `.env` non lu / "Configuration incomplète" | `load_dotenv()` manquant | Ajouter `from dotenv import load_dotenv` + `load_dotenv()` en haut du fichier |
-| Modèle OpenRouter "not a valid model ID" | Slug de modèle dépassé | Vérifier le nom exact sur openrouter.ai/models |
-| Scores à 0.0/10 | Mapping pseudo/LLM inversé ou clé int/str | Voir NOTES.md section 4.2 |
-| Workflow GitHub invisible dans Actions | `.github/` non commité | `git add .github && git commit ... && git push` |
-| Erreur 403 au commit GitHub Actions | Permissions d'écriture | `permissions: contents: write` dans le yml + Settings → Actions → "Read and write permissions" |
-| Streamlit Cloud "repository does not exist" | Repo privé | Rendre le repo public (Settings → Danger Zone) après vérif des secrets |
+| `ModuleNotFoundError` | Lancé avec `python src/module.py` | Utiliser `python -m src.module` depuis la racine |
+| `.env` non lu | `load_dotenv()` manquant | Ajouter `from dotenv import load_dotenv` + `load_dotenv()` en haut |
+| Modèle "not a valid model ID" | Slug dépassé | `python -m src.updater` ou vérifier openrouter.ai/models |
+| Scores à 0.0/10 | Mapping pseudo/LLM inversé | Voir NOTES.md section 4.2 |
+| Workflow GitHub invisible | `.github/` non commité | `git add .github && git commit && git push` |
+| Erreur 403 GitHub Actions | Permissions d'écriture | `permissions: contents: write` dans yml + Settings → Actions |
+| Push rejeté (fetch first) | GitHub Actions a commité avant toi | `git pull origin dev --no-edit && git push origin dev` |
+| Streamlit "repository does not exist" | Repo privé | Rendre public après vérif secrets |
+| Rate limit 429 dans updater | Modèle gratuit trop limité | Normal — retry automatique, modèle conservé si échec |
 
 ---
 
-##  Checklist avant de fermer une session de travail
+## ✅ Checklist avant de fermer une session
 
 ```
 □ git status → rien d'important en attente
-□ git push origin dev fait
-□ .env jamais commité (vérifier git status ne le liste pas)
-□ Si run lancé : vérifier results/ et historique.json à jour
+□ git pull origin dev --no-edit && git push origin dev
+□ .env jamais dans les fichiers trackés
+□ Si run lancé : vérifier results/ à jour
+□ Solde OpenRouter suffisant pour le prochain run
 ```

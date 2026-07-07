@@ -7,16 +7,19 @@ Ce document recense tout ce qui a été fait sur ce projet : architecture, bugs 
 ## 1. État actuel du projet (résumé)
 
 ```
-   Architecture complète (src/, data/, results/, dashboard.py, run.py)
-   7 LLM sélectionnés et fonctionnels via OpenRouter
-   Pipeline de benchmark complet (collecte + jury tournant + scores)
-   Dashboard Streamlit déployé publiquement
-   Détection automatique de nouvelles versions de LLM (detector.py)
-   Décision automatique de lancer un run (scheduler.py)
-   Notifications email (notifier.py)
-   GitHub Actions — pipeline complet automatisé et VALIDÉ (run réussi de bout en bout)
-   Dépôt GitHub public + Streamlit Cloud déployé
-   README.md, Guide Git, Notes techniques rédigés
+✅ Architecture complète (src/, data/, results/, dashboard.py, run.py)
+✅ 7 LLM sélectionnés et fonctionnels via OpenRouter
+✅ Pipeline de benchmark complet (collecte + jury tournant + scores)
+✅ 5 runs avec moyenne finale (classement plus fiable)
+✅ Mise à jour automatique des modèles (updater.py)
+✅ Dashboard Streamlit déployé publiquement
+✅ Détection automatique de nouvelles versions de LLM (detector.py)
+✅ Décision automatique de lancer un run (scheduler.py)
+✅ Notifications email avec lien dashboard (notifier.py)
+✅ GitHub Actions — pipeline complet automatisé et VALIDÉ
+✅ Dépôt GitHub public + Streamlit Cloud déployé
+✅ README.md, Guide Git, Notes techniques rédigés
+✅ Guide Autonomie technique rédigé
 ```
 
 🔗 **Dashboard public** : https://wealins-benchmark-nomhgcjhfdyvgzpxkz8cfn.streamlit.app/
@@ -26,19 +29,23 @@ Ce document recense tout ce qui a été fait sur ce projet : architecture, bugs 
 
 ## 2. Sélection finale — 7 LLM
 
-| LLM | Modèle (slug OpenRouter) | Fournisseur |
+| LLM | Modèle actuel (slug OpenRouter) | Fournisseur |
 |---|---|---|
 | Claude | `anthropic/claude-3-haiku` | Anthropic |
 | GPT | `openai/gpt-4o-mini` | OpenAI |
-| Gemini | `google/gemini-2.5-flash` | Google |
+| Gemini | `google/gemini-3.5-flash` | Google |
 | Gemma 3 | `google/gemma-3-27b-it` | Google |
-| Qwen | `qwen/qwen-2.5-72b-instruct` | Alibaba |
+| Qwen | `qwen/qwen3.7-plus` | Alibaba |
 | Command R+ | `cohere/command-a` | Cohere |
-| Llama 3.3 | `meta-llama/llama-3.3-70b-instruct` | Meta |
+| Llama 3.3 | `meta-llama/llama-4-maverick` | Meta |
 
-**Pourquoi 7 et pas plus** : coût (70 appels en collecte + 70 en jury = 140 appels/run), temps (~45 min/run), et surtout fiabilité — tous les 7 modèles fonctionnent à 100% à la fois comme *répondant* et comme *juge*. Couvre 6 fournisseurs différents.
+> Note : Gemini, Qwen et Llama ont été mis à jour automatiquement par updater.py.
+> Les slugs ci-dessus peuvent évoluer au fil des runs automatiques.
+> Toujours vérifier `src/llm_clients.py` pour les valeurs actuelles.
 
-**Modèles testés puis écartés** (instables en tant que juge) : DeepSeek R1, Mistral Nemo, Phi-4, Llama 4 Scout (détails section 4.5).
+**Pourquoi 7 et pas plus** : coût, temps (~225 min pour 5 runs), et surtout fiabilité — tous les 7 modèles fonctionnent à 100% à la fois comme *répondant* et comme *juge*. Couvre 6 fournisseurs différents.
+
+**Modèles testés puis écartés** (instables en tant que juge) : DeepSeek R1, Mistral Nemo, Phi-4, Llama 4 Scout.
 
 ---
 
@@ -52,20 +59,21 @@ wealins-benchmark/
 │   └── processed/
 ├── results/
 │   ├── benchmark_YYYY-MM-DD.json
-│   └── historique.json
+│   └── historique.json       (reconstruit automatiquement)
 ├── src/
 │   ├── __init__.py
 │   ├── llm_clients.py        Config des 7 LLM + appel OpenRouter
-│   ├── benchmark.py           Orchestration du run complet
-│   ├── evaluator.py           Prompts, jury tournant, calcul scores
-│   ├── utils.py               Pseudonymisation, parsing, stats
-│   ├── loader.py              Sauvegarde / chargement résultats
-│   ├── detector.py            Détection nouvelles versions LLM
-│   ├── scheduler.py            Décision auto : RUN ou SKIP
-│   └── notifier.py             Envoi d'e-mails
-├── questions.py                10 questions + 8 critères pondérés
-├── dashboard.py                 Interface Streamlit (4 onglets)
-├── run.py                       Point d'entrée principal
+│   ├── benchmark.py          Orchestration — 5 runs + moyenne finale
+│   ├── evaluator.py          Prompts, jury tournant, calcul scores
+│   ├── utils.py              Pseudonymisation, parsing, stats
+│   ├── loader.py             Sauvegarde / chargement résultats
+│   ├── detector.py           Détection nouvelles versions LLM
+│   ├── updater.py            Test + mise à jour automatique des modèles
+│   ├── scheduler.py          Décision auto : RUN ou SKIP
+│   └── notifier.py           Envoi d'e-mails + lien dashboard
+├── questions.py              10 questions + 8 critères pondérés
+├── dashboard.py              Interface Streamlit (4 onglets)
+├── run.py                    Point d'entrée principal
 ├── requirements.txt
 ├── .env / .env.example
 ├── .gitignore
@@ -78,261 +86,232 @@ wealins-benchmark/
 
 ### 4.1 Noms de modèles incorrects / dépréciés
 
-**Symptôme** : erreurs 400/404 "not a valid model ID" pour Gemini, Mistral, Command R+, Qwen.
+**Symptôme** : erreurs 400/404 "not a valid model ID".
 
-**Cause** : les fournisseurs renomment/retirent des modèles régulièrement.
-
-**Correction** : toujours vérifier le slug exact sur https://openrouter.ai/models, ne jamais deviner. Modèles corrigés :
-- `gemini-1.5-flash` → `google/gemini-2.5-flash`
-- `command-r-plus-08-2024` → `cohere/command-a`
-- `qwen-2.5-72b-instruct:free` → `qwen-2.5-72b-instruct`
+**Correction** : toujours vérifier le slug exact sur https://openrouter.ai/models.
+Désormais géré automatiquement par `updater.py`.
 
 ---
 
 ### 4.2 Scores finaux à 0.0/10 malgré un jury fonctionnel
 
-**Symptôme** : collecte et jury se déroulaient sans erreur, mais classement final = 0.0/10 pour tous.
-
-**Cause 1 — clés int vs str** : `question["id"]` est un entier, mais JSON convertit les clés de dictionnaire en chaînes. `reponse.get(question["id"])` retournait `None`.
-
-**Correction** :
+**Cause 1 — clés int vs str** : JSON convertit les clés en chaînes.
 ```python
-reponse_q = reponse.get(
-    str(question["id"]),
-    reponse.get(question["id"], "Pas de réponse")
-)
+reponse_q = reponse.get(str(question["id"]), reponse.get(question["id"], "Pas de réponse"))
 ```
 
-**Cause 2 — mapping inversé (LA plus grave)** : le code faisait :
+**Cause 2 — mapping inversé (LA plus grave)** :
 ```python
+# FAUX
 llm_par_pseudo = {v: k for k, v in mapping_secret.items()}
-```
-Ça créait l'INVERSE de ce qu'il fallait. `mapping_secret` était déjà `{"A": "claude", "B": "gpt", ...}` — pas besoin d'inverser.
-
-**Correction** :
-```python
+# CORRECT
 llm_par_pseudo = mapping_secret  # déjà dans le bon sens
 ```
 
-**Leçon** : si un calcul retourne systématiquement 0/None malgré des données correctes en entrée, vérifier en priorité le sens des dictionnaires de correspondance (mapping).
+**Leçon** : si un calcul retourne systématiquement 0/None, vérifier le sens des dictionnaires en priorité.
 
 ---
 
 ### 4.3 Réponses JSON du jury invalides ou tronquées
 
-**Symptôme** : "Impossible de parser le JSON" pour Mistral, Phi-4, Llama 4, Command R+, DeepSeek.
-
-**Causes multiples** :
-- Mod_le encadre avec ` ```json ... ``` `
-- JSON tronqué (accolades manquantes, limite de tokens atteinte)
-- Texte explicatif autour du JSON
-- Format non-standard `[A]: {...}` au lieu de `{"A": {...}}`
-- Refus pur et simple de l'exercice
-
-**Corrections appliquées** (dans `src/utils.py`, fonction `parser_json_llm`, 5 cas en cascade) :
-1. `json.loads()` direct
-2. Extraction entre ` ```json ` et ` ``` `, avec réparation des accolades manquantes
-3. Extraction entre ` ``` ` et ` ``` ` (sans "json")
-4. Recherche de la première `{` et dernière `}` du texte
-5. Reconnaissance regex du format `[A]: {...}`
-
-**Changement de format majeur** : passage du format JSON vers un format texte simple, une note par ligne :
+**Correction** : passage au format texte simple ligne par ligne :
 ```
 A-exactitude_technique:8
 A-maitrise_vocabulaire:7
-A-pertinence_reglementaire:6
 ```
-Beaucoup plus tolérant — parsé ligne par ligne via `parser_notes_texte` (JSON gardé en fallback).
-
-**Reformulation du prompt** : ajout de "exercice fictif de notation, il n'y a pas de mauvaise réponse" pour lever les refus de Mistral.
+JSON gardé en fallback avec 5 cas de réparation.
 
 ---
 
 ### 4.4 Indentation Python cassée après copier-coller
 
-**Symptôme** : `SyntaxError`/`IndentationError`, ou code mort après un `return`.
-
-**Cas concret** : dans `src/utils.py`, tout le code de `parser_json_llm` avait été collé APRÈS le `return notes` de `parser_notes_texte` — jamais exécuté, en plus de casser la syntaxe.
-
-**Correction** : séparation propre des deux fonctions, chacune avec sa signature `def`, son corps indenté (4 espaces), son `return`.
-
-**Leçon** : après tout remplacement de bloc, relire le fichier entier pour vérifier indentation et absence de code orphelin avant de relancer.
+**Leçon** : après tout copier-coller, relire le fichier entier avant de relancer.
 
 ---
 
 ### 4.5 Modèles instables dans le rôle de juge
 
-| Modèle | Comportement observé en tant que juge |
+| Modèle | Comportement |
 |---|---|
-| DeepSeek R1 | Réponse vide (None) — mode "thinking" épuise les tokens |
+| DeepSeek R1 | Réponse vide — mode "thinking" épuise les tokens |
 | Mistral Nemo | Refuse l'exercice ~70% des cas |
 | Phi-4 | Explique au lieu de noter |
-| Llama 4 Scout | Réponses vides ou JSON tronqué irrégulièrement |
+| Llama 4 Scout | Réponses vides ou JSON tronqué |
 
-**Décision** : tous les LLM sélectionnés doivent être fiables dans les DEUX rôles (répondant ET juge). Les 4 ci-dessus ont été retirés → passage de 11 à **7 LLM**.
-
----
-
-### 4.6 Coût et temps d'exécution
-
-- Run complet = 2 × (nb LLM) × (nb questions) appels API
-- Avec 11 LLM : 220 appels (~50 min) ; avec 7 LLM : 140 appels (~45 min)
-- Décision : fréquence trimestrielle (au lieu de mensuelle), + déclenchement anticipé si nouvelle version de modèle détectée
+Décision : passage de 11 à **7 LLM**.
 
 ---
 
-### 4.7 Variabilité des résultats entre runs identiques
+### 4.6 Variabilité des résultats entre runs identiques
 
-**Constat** : écarts d'environ ±0,3 point d'un run à l'autre, parfois changement d'ordre entre LLM très proches.
+**Constat** : écarts de ±0.3 point d'un run à l'autre.
 
-**Causes** : pseudonymisation aléatoire à chaque run, non-déterminisme résiduel même à `temperature=0`, nombre de juges ayant réussi variable.
-
-**Décision** : pas de "correction" artificielle (seed fixe envisagé puis écarté, effet marginal). Documenté comme caractéristique connue — le classement global reste stable, c'est la mesure de robustesse pertinente.
+**Solution** : passage à **5 runs avec moyenne finale** dans `benchmark.py`.
+L'erreur standard passe de ±0.3 à ±0.13 — classement beaucoup plus stable.
 
 ---
 
-### 4.8 Erreur 403 au commit automatique GitHub Actions
+### 4.7 Erreur 403 au commit automatique GitHub Actions
 
-**Symptôme** : les 2 premiers runs complets via GitHub Actions réussissaient toutes les étapes sauf "Commit des résultats" :
-```
-remote: Write access to repository not granted.
-fatal: ... returned error: 403
+**Correction (double)** :
+1. `permissions: contents: write` dans `benchmark.yml`
+2. Settings → Actions → General → "Read and write permissions"
+
+---
+
+### 4.8 Workflow GitHub Actions invisible dans l'onglet Actions
+
+**Cause** : `.github/` jamais commité.
+```cmd
+git add .github && git commit && git push
 ```
 
-**Correction (double, les deux nécessaires)** :
-1. Ajout de `permissions: contents: write` au niveau du job dans `benchmark.yml`
-2. Settings → Actions → General → "Workflow permissions" → "Read and write permissions" → Save
+---
 
-Après ces deux changements, run réussi en 45m18s avec commit automatique fonctionnel.
+### 4.9 Streamlit Cloud — "This repository does not exist"
+
+**Cause** : repo privé. Rendu public après vérification absence de clés.
 
 ---
 
-### 4.9 Workflow GitHub Actions invisible dans l'onglet Actions
+### 4.10 Notifier — `.env` non chargé
 
-**Symptôme** : après création de `.github/workflows/benchmark.yml`, l'onglet Actions affichait "Get started with GitHub Actions" comme si rien n'existait.
+**Correction** : ajouter `load_dotenv()` avant tout `os.getenv()`.
 
-**Cause** : le dossier `.github/` était créé en local mais jamais ajouté à Git (`git status` → "Untracked files").
+---
+
+### 4.11 Git push rejeté (fetch first)
+
+**Cause** : GitHub Actions a commité pendant qu'on travaillait en local.
 
 **Correction** :
 ```cmd
-git add .github
-git commit -m "feat: github actions workflow benchmark"
-git push origin dev
+git pull origin dev --no-edit && git push origin dev
 ```
 
 ---
 
-### 4.10 Streamlit Cloud — "This repository does not exist"
+### 4.12 updater.py — erreur git push
 
-**Symptôme** : impossible de déployer, message d'erreur malgré un repo existant.
+**Cause** : même problème — GitHub a des commits en avance au moment du push automatique.
 
-**Cause** : l'offre gratuite Streamlit Cloud ne déploie que des repos GitHub **publics**. Le repo était privé.
-
-**Correction** :
-1. Vérification qu'aucune clé API n'était dans l'historique : `git log --all -p | findstr /i "sk-or-v1"` → rien trouvé
-2. Settings → Danger Zone → Change repository visibility → Make public
-3. Redéploiement réussi sur Streamlit Cloud
-
----
-
-### 4.11 Notifier — `.env` non chargé
-
-**Symptôme** : `python -m src.notifier` → "Configuration email incomplète (.env)" malgré un `.env` correctement rempli.
-
-**Cause** : `load_dotenv()` manquant dans `src/notifier.py` — `os.getenv()` ne trouvait donc rien.
-
-**Correction** :
+**Correction dans `commiter_mise_a_jour`** : ajouter un `git pull` avant le `git push` :
 ```python
-from dotenv import load_dotenv
-load_dotenv()
+subprocess.run(["git", "pull", "origin", "dev", "--no-edit"], check=True)
+subprocess.run(["git", "push", "origin", "dev"], check=True)
 ```
-ajouté en tête de fichier, avant tout `os.getenv()`.
+
+---
+
+### 4.13 updater.py — rate limit (erreur 429)
+
+**Cause** : modèles gratuits (ex: gemma-4:free) très limités en débit.
+
+**Correction** : retry automatique après 3 secondes si erreur 429, dans les deux tests (répondant et juge).
 
 ---
 
 ## 5. Pipeline d'automatisation — comment ça marche
 
 ```
-1. detector.py
-   → interroge l'API OpenRouter, compare la date du modèle
-     configuré vs autres modèles de la même famille
-   → filtre les modèles non pertinents (guard, embedding,
-     tts, image, vision-only, moderation)
+Lundi 4h UTC — GitHub Actions se déclenche
 
-2. scheduler.py (decider_run)
-   → SI detector trouve une nouvelle version → RUN immédiat
-   → SINON SI dernier run > 90 jours → RUN trimestriel
+1. detector.py
+   → Interroge l'API OpenRouter
+   → Détecte les nouvelles versions disponibles
+
+2. updater.py (NOUVEAU)
+   → Pour chaque nouveau modèle détecté :
+     - Test répondant (1 question)
+     - Test juge (1 notation)
+     - Si OK  : met à jour llm_clients.py + commit
+     - Si KO  : conserve l'ancien modèle
+
+3. scheduler.py
+   → SI nouvelles versions → RUN
+   → SI dernier run > 90 jours → RUN trimestriel
    → SINON → SKIP
 
-3. notifier.py
-   → email "nouvelles versions détectées" (si applicable)
-   → email "résultats du run" (classement final)
+4. notifier.py
+   → Email "nouvelles versions + mises à jour effectuées"
+   → Email "résultats du run + lien dashboard"
 
-4. run.py (run_avec_decision)
-   → enchaîne les 3 étapes ci-dessus + lancer_benchmark()
+5. benchmark.py (5 runs)
+   → Lance 5 runs complets
+   → Calcule la moyenne des scores
+   → Sauvegarde le résultat final
 
-5. GitHub Actions (.github/workflows/benchmark.yml)
-   → cron hebdomadaire (lundi 6h UTC) + déclenchement manuel
-   → exécute run_avec_decision()
-   → commit + push automatique des résultats (results/)
+6. GitHub Actions
+   → Commit automatique de results/ ET src/llm_clients.py
+   → Push vers dev
 ```
 
 ---
 
-## 6. Ce qui reste à faire
+## 6. Coût et temps estimés
 
 ```
-   Surveiller le premier run automatique du cron
-   (prochain lundi 6h UTC) — vérifier que tout se déclenche
-   sans intervention
+1 run  = ~140 appels API = ~45 min = ~0.80€
+5 runs = ~700 appels API = ~225 min = ~4.00€
 
-   Évaluer si certains modèles écartés (DeepSeek, Mistral,
-   Phi-4, Llama 4 Scout) méritent d'être retestés si une
-   version plus stable sort (via detector.py)
+Erreur standard avec 5 runs : ±0.13 point
+(vs ±0.3 avec 1 run seul)
 
-   Nettoyer requirements.txt : retirer les dépendances
-   non utilisées (anthropic, mistralai, groq, cohere,
-   google-generativeai, notebook) — tout passe par
-   `openai` + OpenRouter désormais
-
-   Optionnel : remplacer actions/checkout@v4 et
-   actions/setup-python@v5 par des versions compatibles
-   Node.js 24 avant l'échéance de septembre 2026
-   (warning non bloquant actuellement)
-
-   Optionnel : envisager de réintégrer progressivement
-   des modèles supplémentaires si leur fiabilité
-   en tant que juge s'améliore avec de nouvelles versions
+Budget recommandé avant un run : 5€ minimum
+Vérifier : https://openrouter.ai/settings/credits
 ```
 
 ---
 
-## 7. Rappels pratiques
+## 7. Ce qui reste à faire
+
+```
+⏳ Attendre le prochain run lundi 4h UTC
+   → Premier vrai test du pipeline complet
+   → 5 runs + mise à jour auto des modèles
+
+⏳ Valider les critères de pondération
+   avec l'équipe métier Wealins
+
+⏳ Script .bat d'installation locale
+   → Double-clic pour lancer sans toucher au code
+
+⏳ Optionnel : remplacer actions/checkout@v4
+   et actions/setup-python@v5 par versions
+   compatibles Node.js 24 (avant sept. 2026)
+
+⏳ Merger dev → main quand pipeline validé
+```
+
+---
+
+## 8. Rappels pratiques
 
 ```cmd
-# Lancer un run manuel
+# Reprendre le projet
+cd C:\Users\pango\OneDrive\Bureau\Projet_personnel\wealins-benchmark
+venv-wealins\Scripts\activate
+git pull origin dev --no-edit
+
+# Run manuel (5 runs = ~225 min = ~4€)
 python run.py
 
-# Lancer le dashboard en local
+# Dashboard en local
 streamlit run dashboard.py
 
-# Tester la détection de nouvelles versions
-python -m src.detector
+# Tester les modules isolément
+python -m src.detector      → nouvelles versions
+python -m src.updater       → test + mise à jour modèles
+python -m src.scheduler     → décision RUN/SKIP
+python -m src.notifier      → email de test
 
-# Tester la décision automatique
-python -m src.scheduler
-
-# Tester l'envoi d'email
-python -m src.notifier
-
-# Workflow complet (comme GitHub Actions)
+# Pipeline complet (comme GitHub Actions)
 python -c "from run import run_avec_decision; run_avec_decision()"
+
+# Push sans conflit
+git pull origin dev --no-edit && git push origin dev
 ```
-
-Pour relancer GitHub Actions manuellement : onglet **Actions** → "Wealins LLM Benchmark" → **Run workflow** → branche `dev`.
-
- Chaque run consomme ~140 appels OpenRouter (~0,50 à 1 €). Vérifier le solde avant de lancer : https://openrouter.ai/settings/credits
 
 ---
 
-*Document généré pour assurer la continuité du projet entre sessions de travail.*
+*Document mis à jour — juillet 2026.*
