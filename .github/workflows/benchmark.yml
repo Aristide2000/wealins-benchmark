@@ -2,13 +2,14 @@ name: Wealins LLM Benchmark
 
 on:
   schedule:
-    # Tous les lundis à 6h00 UTC
+    # Tous les lundis à 4h00 UTC (6h Luxembourg)
     - cron: '0 4 * * 1'
-  workflow_dispatch:  # permet de lancer manuellement depuis GitHub
+  workflow_dispatch:
 
 jobs:
   benchmark:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
     permissions:
       contents: write
 
@@ -23,10 +24,10 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Installer les dépendances
+      - name: Installer les dependances
         run: pip install -r requirements.txt
 
-      - name: Lancer la décision + benchmark
+      - name: Lancer la decision + benchmark
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GMAIL_ADRESSE: ${{ secrets.GMAIL_ADRESSE }}
@@ -34,10 +35,10 @@ jobs:
           EMAIL_DESTINATAIRE: ${{ secrets.EMAIL_DESTINATAIRE }}
         run: python -c "from run import run_avec_decision; run_avec_decision()"
 
-      - name: Commit des résultats
+      - name: Commit des resultats
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add results/
+          git add results/ src/llm_clients.py
           git diff --staged --quiet || git commit -m "chore: resultats benchmark automatique [skip ci]"
           git push origin dev
