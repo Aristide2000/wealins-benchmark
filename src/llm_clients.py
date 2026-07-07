@@ -30,7 +30,7 @@ LLM_CONFIG = {
     },
     "gemini": {
         "nom":      "Gemini",
-        "modele":   "google/gemini-2.5-flash",
+        "modele":   "google/gemini-3.5-flash",
         "provider": "OpenRouter",
         "couleur":  "#3B82F6",
     },
