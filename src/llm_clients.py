@@ -24,7 +24,7 @@ LLM_CONFIG = {
     },
     "gpt": {
         "nom":      "GPT",
-        "modele":   "openai/gpt-4o-mini",
+        "modele":   "openai/gpt-5.6-luna-pro",
         "provider": "OpenRouter",
         "couleur":  "#10A37F",
     },
@@ -48,7 +48,7 @@ LLM_CONFIG = {
     },
     "gemma": {
         "nom":      "Gemma 3",
-        "modele":   "google/gemma-3-27b-it",
+        "modele":   "google/gemma-4-26b-a4b-it:free",
         "provider": "OpenRouter",
         "couleur":  "#34A853",
     },
