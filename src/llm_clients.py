@@ -16,47 +16,47 @@ load_dotenv()
 # ============================================================
 
 LLM_CONFIG = {
+    "gpt": {
+        "nom":      "Copilot (GPT-4o)",
+        "modele":   "openai/gpt-4o",
+        "provider": "OpenRouter",
+        "couleur":  "#0078D4",
+    },
     "claude": {
         "nom":      "Claude",
         "modele":   "anthropic/claude-3-haiku",
         "provider": "OpenRouter",
         "couleur":  "#D97757",
     },
-    "gpt": {
-        "nom":      "GPT",
-        "modele":   "openai/gpt-5.6-luna-pro",
-        "provider": "OpenRouter",
-        "couleur":  "#10A37F",
-    },
     "gemini": {
         "nom":      "Gemini",
-        "modele":   "google/gemini-3.5-flash",
+        "modele":   "google/gemini-2.5-flash",
         "provider": "OpenRouter",
         "couleur":  "#3B82F6",
     },
-    "qwen": {
-        "nom":      "Qwen",
-        "modele":   "qwen/qwen3.7-plus",
-        "provider": "OpenRouter",
-        "couleur":  "#EC4899",
-    },
-    "commandr": {
-        "nom":      "Command R+",
-        "modele":   "cohere/command-a",
-        "provider": "OpenRouter",
-        "couleur":  "#8B5CF6",
-    },
-    "gemma": {
-        "nom":      "Gemma 3",
-        "modele":   "google/gemma-4-26b-a4b-it:free",
-        "provider": "OpenRouter",
-        "couleur":  "#34A853",
-    },
-    "llama33": {
-        "nom":      "Llama 3.3",
-        "modele":   "meta-llama/llama-4-maverick",
+    "llama": {
+        "nom":      "Llama",
+        "modele":   "meta-llama/llama-3.3-70b-instruct",
         "provider": "OpenRouter",
         "couleur":  "#0668E1",
+    },
+    "mistral": {
+        "nom":      "Mistral",
+        "modele":   "mistralai/mistral-medium-3-5",
+        "provider": "OpenRouter",
+        "couleur":  "#FF7000",
+    },
+    "deepseek": {
+        "nom":      "DeepSeek",
+        "modele":   "deepseek/deepseek-v4-flash",
+        "provider": "OpenRouter",
+        "couleur":  "#4D6BFE",
+    },
+    "grok": {
+        "nom":      "Grok",
+        "modele":   "x-ai/grok-4.5",
+        "provider": "OpenRouter",
+        "couleur":  "#1DA1F2",
     },
 }
 
