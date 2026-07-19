@@ -20,43 +20,43 @@ LLM_CONFIG = {
         "nom":      "Copilot (GPT-4o)",
         "modele":   "openai/gpt-4o",
         "provider": "OpenRouter",
-        "couleur":  "#0078D4",
+        "couleur":  "#10A37F",   # vert OpenAI (le moteur !)
     },
     "claude": {
         "nom":      "Claude",
         "modele":   "anthropic/claude-3-haiku",
         "provider": "OpenRouter",
-        "couleur":  "#D97757",
+        "couleur":  "#D97757",   # terracotta Anthropic
     },
     "gemini": {
         "nom":      "Gemini",
         "modele":   "google/gemini-2.5-flash",
         "provider": "OpenRouter",
-        "couleur":  "#3B82F6",
+        "couleur":  "#9168C0",   # violet du dégradé Gemini
     },
     "llama": {
         "nom":      "Llama",
         "modele":   "meta-llama/llama-3.3-70b-instruct",
         "provider": "OpenRouter",
-        "couleur":  "#0668E1",
+        "couleur":  "#0866FF",   # bleu Meta (le seul bleu vif)
     },
     "mistral": {
         "nom":      "Mistral",
         "modele":   "mistralai/mistral-medium-3-5",
         "provider": "OpenRouter",
-        "couleur":  "#FF7000",
+        "couleur":  "#FF7000",   # orange Mistral
     },
     "deepseek": {
         "nom":      "DeepSeek",
         "modele":   "deepseek/deepseek-v4-flash",
         "provider": "OpenRouter",
-        "couleur":  "#4D6BFE",
+        "couleur":  "#4D6BFE",   # indigo DeepSeek
     },
     "grok": {
         "nom":      "Grok",
         "modele":   "x-ai/grok-4.5",
         "provider": "OpenRouter",
-        "couleur":  "#1DA1F2",
+        "couleur":  "#333333",   # noir xAI (adouci pour lisibilité)
     },
 }
 
