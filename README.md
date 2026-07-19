@@ -2,7 +2,7 @@
 
 Système de veille technologique automatisé comparant les principaux LLM du marché sur des questions métier relatives à l'assurance vie luxembourgeoise (Wealins / Foyer Group).
 
-🔗 **Dashboard public** : https://wealins-benchmark-nomhgcjhfdyvgzpxkz8cfn.streamlit.app/
+🔗 **Dashboard public** : https://wealins-benchmark-ufwn2gzrfv2sksub4d99xc.streamlit.app/
 
 ---
 

@@ -22,7 +22,7 @@ Ce document recense tout ce qui a été fait sur ce projet : architecture, bugs 
 ✅ Guide Autonomie technique rédigé
 ```
 
-🔗 **Dashboard public** : https://wealins-benchmark-nomhgcjhfdyvgzpxkz8cfn.streamlit.app/
+🔗 **Dashboard public** : https://wealins-benchmark-ufwn2gzrfv2sksub4d99xc.streamlit.app
 🔗 **Dépôt GitHub** : https://github.com/Aristide2000/wealins-benchmark (branche `dev`)
 
 ---

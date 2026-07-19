@@ -108,7 +108,7 @@ Cron automatique : tous les lundis à 4h UTC (6h Luxembourg).
 
 | Quoi | Lien |
 |---|---|
-| Dashboard public | https://wealins-benchmark-nomhgcjhfdyvgzpxkz8cfn.streamlit.app/ |
+| Dashboard public | https://wealins-benchmark-ufwn2gzrfv2sksub4d99xc.streamlit.app/ |
 | Dépôt GitHub | https://github.com/Aristide2000/wealins-benchmark (branche `dev`) |
 | Actions GitHub | https://github.com/Aristide2000/wealins-benchmark/actions |
 | Secrets du repo | https://github.com/Aristide2000/wealins-benchmark/settings/secrets/actions |
