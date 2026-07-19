@@ -127,7 +127,7 @@ st.markdown("""
          Wealins — LLM Benchmark
     </h1>
     <p style="margin:8px 0 0 0;color:rgba(255,255,255,0.8)">
-        Veille technologique · 8 LLMs ·
+        Veille technologique automatisée ·
         10 questions assurance vie luxembourgeoise
     </p>
 </div>
@@ -248,11 +248,11 @@ with tab1:
                     <div style="font-size:2rem;
                                 font-weight:800;
                                 color:#1B3A6B">
-                        {llm['Score']}/10
+                        {llm['Score']}
                     </div>
                     <div style="font-size:0.85rem;
                                 color:#888;">
-                        ± 0.3 (variabilité estimée)
+                        Moyenne de {donnees.get('nb_runs', 1)} runs
                     </div>
                     <div style="color:#888;font-size:0.8rem">
                         {llm['Provider']}
@@ -272,7 +272,7 @@ with tab1:
             orientation="h",
             marker_color=row["Couleur"],
             name=row["LLM"],
-            text=f"  {row['Score']}/10",
+            text=f"  {row['Score']}",
             textposition="outside",
         ))
     fig.update_layout(
@@ -287,11 +287,8 @@ with tab1:
     st.plotly_chart(fig, use_container_width=True)
 
     # Tableau
-    st.markdown("###  Tableau détaillé")
+    st.markdown(f"###  Tableau détaillé (moyenne de {donnees.get('nb_runs', 1)} runs)")
     df_table = df[["LLM", "Provider", "Modèle", "Score"]].copy()
-    df_table["Intervalle"] = df_table["Score"].apply(
-        lambda x: f"{round(x-0.3,2)} – {round(x+0.3,2)}"
-    )
     df_table.index = range(1, len(df_table) + 1)
     st.dataframe(df_table, use_container_width=True)
 
