@@ -1,8 +1,8 @@
 """
 questions.py
 ============
-Contient les 10 questions métier Wealins
-et les 8 critères de notation pondérés.
+10 questions métier réelles WEALINS
+fournies par les équipes Compliance, Juridique, Finance et WAP. et les 8 critères de notation pondérés.
 
 Ce fichier est importé par :
 - benchmark.py  → pour envoyer les questions aux LLMs
@@ -19,99 +19,159 @@ Ce fichier est importé par :
 # - theme   : le thème métier testé
 # - question: le texte exact envoyé au LLM
 
+
 QUESTIONS = [
+    # ── COMPLIANCE ──────────────────────────────────────────
     {
         "id": 1,
-        "theme": "LPS & Réglementation",
-        "question": "Qu'est-ce que la Libre Prestation de Services (LPS) en assurance vie luxembourgeoise et quels avantages offre-t-elle à une compagnie comme Wealins opérant dans 11 pays européens ?"
+        "categorie": "Compliance",
+        "titre": "Alerte client — favoritisme",
+        "question": (
+            "Nous avons une alerte sur un client, indiquant : "
+            "Juin 2018 - aurait été condamné par le tribunal de Bethune "
+            "à quatre mois de prison avec sursis pour favoritisme dans une "
+            "affaire de marchés publics à la mairie d'Hénin-Beaumont. "
+            "Novembre 2019 - condamné par la cour d'appel de Douai à cinq "
+            "mois de prison avec sursis pour favoritisme (affaire de marchés "
+            "publics à la mairie d'Hénin-Beaumont). Janvier 2023 - aucune "
+            "autre information n'a été communiquée. "
+            "As-tu des informations sur cette affaire ? Comment tu traiterais "
+            "cette alerte d'un point de vue compliance ? Tu peux me préparer "
+            "une conclusion à mettre dans nos outils ? Devons-nous prendre "
+            "des mesures spécifiques ?"
+        ),
     },
     {
         "id": 2,
-        "theme": "Produits — FID & FAS",
-        "question": "Quelle est la différence entre un Fonds Interne Dédié (FID) et un Fonds d'Assurance Spécialisé (FAS) dans le cadre d'un contrat d'assurance vie luxembourgeois ?"
+        "categorie": "Compliance",
+        "titre": "Déclaration comptes étrangers — Hong Kong",
+        "question": (
+            "Un résident fiscal à Hong Kong doit-il déclarer "
+            "ses comptes à l'étranger ?"
+        ),
     },
+
+    # ── JURIDIQUE ───────────────────────────────────────────
     {
         "id": 3,
-        "theme": "Triangle de Sécurité",
-        "question": "Qu'est-ce que le Triangle de Sécurité luxembourgeois en assurance vie et comment protège-t-il concrètement les souscripteurs en cas de faillite de la compagnie ?"
+        "categorie": "Juridique",
+        "titre": "Directive IDD — divergences France",
+        "question": (
+            "Quelles sont les divergences entre la Directive IDD et la "
+            "transposition de cette Directive en droit national français "
+            "en ce qui concerne les courtiers qui distribuent des IBIPS ?"
+        ),
     },
     {
         "id": 4,
-        "theme": "Fiscalité transfrontalière",
-        "question": "Comment fonctionne la fiscalité d'un contrat d'assurance vie luxembourgeois souscrit par un résident fiscal français, notamment en cas de rachat partiel ou total ?"
+        "categorie": "Juridique",
+        "titre": "Règlement SFDR — divergences Belgique",
+        "question": (
+            "Quelles sont les divergences entre le Règlement SFDR et la "
+            "transposition de ce Règlement en droit national belge ?"
+        ),
     },
+
+    # ── FINANCE ─────────────────────────────────────────────
     {
         "id": 5,
-        "theme": "Solvabilité II",
-        "question": "Quelles sont les principales exigences de la directive Solvabilité II applicables à une compagnie d'assurance vie comme Wealins, notamment concernant le SCR (Solvency Capital Requirement) ?"
+        "categorie": "Finance",
+        "titre": "Fonds evergreen — assurance",
+        "question": (
+            "Qu'est-ce qu'implique un investissement dans un fonds evergreen "
+            "pour une compagnie d'assurance ?"
+        ),
     },
     {
         "id": 6,
-        "theme": "Unités de Compte",
-        "question": "Qu'est-ce qu'une unité de compte (UC) dans un contrat d'assurance vie, quels sont les risques associés pour le souscripteur et comment diffère-t-elle d'un fonds en euros ?"
+        "categorie": "Finance",
+        "titre": "Rétrocessions sur upfront fees — produits structurés",
+        "question": (
+            "Qu'est-ce qu'implique la mise en place des rétrocessions sur "
+            "upfront fees pour les produits structurés ?"
+        ),
     },
+
+    # ── WAP ─────────────────────────────────────────────────
     {
         "id": 7,
-        "theme": "Gestion & Arbitrage",
-        "question": "Comment fonctionne l'arbitrage dans un contrat d'assurance vie en unités de compte et quelle est la différence entre gestion libre, gestion conseillée et gestion déléguée ?"
+        "categorie": "WAP",
+        "titre": "Don valeurs mobilières Italie — convention fiscale",
+        "question": (
+            "Si une personne domiciliée en Italie fait un don de valeurs "
+            "mobilières (détenues en Italie) à ses deux enfants résidents "
+            "français, c'est bien l'Italie qui a la compétence pour taxer ? "
+            "(Article 8 ou 9 de la convention non ?)"
+        ),
     },
     {
         "id": 8,
-        "theme": "Succession & Transmission",
-        "question": "Quel est le traitement successoral d'un contrat d'assurance vie luxembourgeois en cas de décès du souscripteur, notamment concernant la clause bénéficiaire et la fiscalité applicable ?"
+        "categorie": "WAP",
+        "titre": "Co-souscription — article 990I ou 757B",
+        "question": (
+            "Dans le cadre d'une co-souscription d'assurance-vie, pour savoir "
+            "si au dénouement on applique le dispositif de l'article 990 I ou "
+            "757 B du CGI, on retient bien l'âge au moment des versements de "
+            "celui des souscripteurs dont le décès dénoue le contrat ?"
+        ),
     },
     {
         "id": 9,
-        "theme": "Clientèle High Net Worth",
-        "question": "Pourquoi l'assurance vie luxembourgeoise est-elle particulièrement adaptée à une clientèle High Net Worth et quels sont les avantages spécifiques par rapport à un contrat français classique ?"
+        "categorie": "WAP",
+        "titre": "Donation Hong Kong — déclaration",
+        "question": (
+            "Une donation faite par un résident de Hong-Kong à ses enfants "
+            "résidents à Hong-Kong, d'avoirs situés à Hong-Kong, doit-elle "
+            "être déclarée à Hong-Kong ?"
+        ),
     },
     {
         "id": 10,
-        "theme": "IFRS 17",
-        "question": "Comment la norme comptable IFRS 17 impacte-t-elle la comptabilisation des contrats d'assurance vie en unités de compte pour une compagnie comme Wealins par rapport à IFRS 4 ?"
+        "categorie": "WAP",
+        "titre": "Résident Thaïlande — police luxembourgeoise UC",
+        "question": (
+            "Une personne résidant en Thaïlande détenant une police "
+            "d'assurance vie en unités de comptes luxembourgeoise doit-il "
+            "déclarer sa simple détention ? Et s'il fait un rachat, comment "
+            "doit-il être taxé ?"
+        ),
     },
 ]
 
-# ============================================================
-# LES 8 CRITÈRES DE NOTATION PONDÉRÉS
-# ============================================================
-# C'est un dictionnaire Python (dict)
-# Chaque critère a :
-# - label : le nom affiché dans le dashboard
-# - poids : son importance dans le score final (total = 1.0 = 100%)
+# ── CRITÈRES DE NOTATION ────────────────────────────────────
 
 CRITERES = {
     "exactitude_technique": {
         "label": "Exactitude technique",
-        "poids": 0.20        # 20% du score final
+        "poids": 0.20,
     },
     "maitrise_vocabulaire": {
-        "label": "Maîtrise vocabulaire assurance",
-        "poids": 0.20        # 20% du score final
+        "label": "Maîtrise du vocabulaire assurance",
+        "poids": 0.20,
     },
     "pertinence_reglementaire": {
         "label": "Pertinence réglementaire",
-        "poids": 0.15        # 15% du score final
+        "poids": 0.15,
     },
     "completude": {
         "label": "Complétude de la réponse",
-        "poids": 0.15        # 15% du score final
+        "poids": 0.15,
     },
     "clarte_lisibilite": {
         "label": "Clarté et lisibilité",
-        "poids": 0.10        # 10% du score final
+        "poids": 0.10,
     },
     "absence_hallucinations": {
         "label": "Absence d'hallucinations",
-        "poids": 0.10        # 10% du score final
+        "poids": 0.10,
     },
     "applicabilite_pratique": {
         "label": "Applicabilité pratique",
-        "poids": 0.05        # 5% du score final
+        "poids": 0.05,
     },
     "gestion_incertitude": {
         "label": "Gestion de l'incertitude",
-        "poids": 0.05        # 5% du score final
+        "poids": 0.05,
     },
 }
 
@@ -122,5 +182,5 @@ CRITERES = {
 # Si tu modifies un poids → Python te prévient si c'est faux
 
 total = sum(c["poids"] for c in CRITERES.values())
-assert round(total, 2) == 1.0, f" Total poids = {total} — doit être 1.0 !"
-print(f" questions.py chargé — {len(QUESTIONS)} questions, {len(CRITERES)} critères")
+assert round(total, 2) == 1.0, f"Total poids = {total} — doit être 1.0 !"
+print(f"questions.py chargé — {len(QUESTIONS)} questions, {len(CRITERES)} critères")
