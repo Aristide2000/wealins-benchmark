@@ -115,7 +115,7 @@ def jury_tournant(
     op_actuelle  = 0
 
     for q in QUESTIONS:
-        print(f"\n  Q{q['id']} — {q['theme']}")
+        print(f"\n  Q{q['id']} — {q['titre']}")
         toutes_notes[q["id"]] = {}
 
         for llm_juge_id, config_juge in LLM_CONFIG.items():

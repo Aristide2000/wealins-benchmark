@@ -149,7 +149,7 @@ if not donnees:
     # Affiche quand même les questions
     st.markdown("###  Questions configurées")
     for q in QUESTIONS:
-        st.markdown(f"**Q{q['id']}** — {q['theme']}")
+        st.markdown(f"**Q{q['id']}** — {q['titre']}")
         st.caption(q['question'])
     st.stop()
 
@@ -368,7 +368,7 @@ with tab3:
     with col_q:
         q_choisie = st.selectbox(
             "Question",
-            [f"Q{q['id']} — {q['theme']}" for q in QUESTIONS]
+            [f"Q{q['id']} — {q['titre']}" for q in QUESTIONS]
         )
     with col_l:
         llm_choisi = st.selectbox(
