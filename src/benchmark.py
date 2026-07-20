@@ -64,7 +64,7 @@ def collecter_reponses() -> dict:
         reponses[llm_id] = {}
 
         for q in QUESTIONS:
-            print(f"     Q{q['id']} : {q['theme']}...", end=" ")
+            print(f"     Q{q['id']} : {q['titre']}...", end=" ")
 
             # Prompt professionnel pour chaque question
             prompt = f"""Tu es un expert en assurance vie luxembourgeoise.
