@@ -79,7 +79,7 @@ Réponse :"""
             reponse = appeler_llm(llm_id, prompt)
             reponses[llm_id][str(q["id"])] = reponse
 
-            if reponse.startswith("ERREUR"):
+            if reponse is None or reponse.startswith("ERREUR"):
                 print("ça ne marche pas !")
             else:
                 print("ça marche !")
