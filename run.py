@@ -31,7 +31,16 @@ def run_avec_decision():
     decision = decider_run()
 
     if not decision["lancer_run"]:
-        print("\n  Aucun run nécessaire pour le moment.")
+        if decision["raison"] == "nouvelle_version_mais_run_recent":
+            print("\n  Nouvelles versions détectées mais run récent.")
+            print("  Envoi d'un email d'information...")
+            notifier_nouvelles_versions(
+                decision["rapport_detection"] +
+                "\n\n/!\\ Aucun run lancé — dernier run < 30 jours.\n"
+                "Le prochain run aura lieu quand 30 jours seront écoulés."
+            )
+        else:
+            print("\n  Aucun run nécessaire pour le moment.")
         return
 
     # Si nouvelles versions détectées :
