@@ -464,7 +464,7 @@ with tab4:
             title="Évolution des scores par mois"
         )
         fig_evol.update_layout(
-            yaxis=dict(range=[0, 10]),
+            yaxis=dict(range=[5, 10]),
             height=450,
             paper_bgcolor="rgba(0,0,0,0)",
             font=dict(family="Plus Jakarta Sans")
