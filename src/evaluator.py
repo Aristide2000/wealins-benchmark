@@ -40,7 +40,8 @@ def construire_prompt_notation(
             str(question["id"]),
             reponse.get(question["id"], "Pas de réponse")
         )
-        reponse_courte = str(reponse_q)[:500]
+        mots = str(reponse_q).split()
+        reponse_courte = " ".join(mots[:300])
         reponses_texte += f"\n[{pseudo}]: {reponse_courte}\n"
 
     # Liste des pseudos présents
@@ -60,7 +61,7 @@ def construire_prompt_notation(
     prompt = f"""Tu es un expert en assurance vie luxembourgeoise.
 Note chaque répondant sur 8 critères de 0 à 10.
 
-QUESTION: {question['question'][:200]}
+QUESTION: {question['question']}
 
 RÉPONSES À NOTER:
 {reponses_texte}
