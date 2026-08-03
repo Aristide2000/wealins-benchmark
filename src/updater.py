@@ -94,9 +94,9 @@ def tester_modele(slug: str, nom: str) -> bool:
         response = client.chat.completions.create(
             model=slug,
             messages=[{"role": "user", "content": QUESTION_TEST}],
-            max_tokens=500,
+            max_tokens=4000,
             temperature=0,
-            timeout=30
+            timeout=60
         )
         reponse = response.choices[0].message.content
         if not reponse or len(reponse.strip()) < 20:
@@ -137,22 +137,12 @@ def tester_modele(slug: str, nom: str) -> bool:
             temperature=0,
             timeout=30
         )
-        notation = response.choices[0].message.content
-        if not notation or ":" not in notation:
-            print(f"      /!\\ Format de notation incorrect")
+        lignes = [l for l in notation.strip().split('\n')
+                    if '-' in l and ':' in l]
+        if len(lignes) < 13:  # 80% de 16 lignes minimum
+            print(f"      /!\\ Format incomplet : {len(lignes)}/16 lignes")
             return False
-
-        match = re.search(r":(\d+(?:\.\d+)?)", notation)
-        if not match:
-            print(f"      /!\\ Aucune note trouvée dans : {notation}")
-            return False
-
-        note = float(match.group(1))
-        if note < 0 or note > 10:
-            print(f"      /!\\ Note hors limites : {note}")
-            return False
-
-        print(f"      >> Juge OK (note : {note}/10)")
+        print(f"      >> Juge OK ({len(lignes)}/16 lignes)")
         return True
 
     except Exception as e:
@@ -171,11 +161,12 @@ def tester_modele(slug: str, nom: str) -> bool:
                 if not notation or ":" not in notation:
                     print(f"      /!\\ Format incorrect après retry")
                     return False
-                match = re.search(r":(\d+(?:\.\d+)?)", notation)
-                if not match:
+                lignes = [l for l in notation.strip().split('\n')
+                            if '-' in l and ':' in l]
+                if len(lignes) < 13:
+                    print(f"      /!\\ Format incomplet après retry")
                     return False
-                note = float(match.group(1))
-                print(f"      >> Juge OK après retry (note : {note}/10)")
+                print(f"      >> Juge OK après retry ({len(lignes)}/16 lignes)")
                 return True
             except Exception as e2:
                 print(f"      /!\\ Erreur juge : {e2}")
