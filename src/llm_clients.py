@@ -48,7 +48,7 @@ LLM_CONFIG = {
     },
     "deepseek": {
         "nom":      "DeepSeek",
-        "modele":   "deepseek/deepseek-v4-flash",
+        "modele":   "deepseek/deepseek-v4-flash-0731",
         "provider": "OpenRouter",
         "couleur":  "#1E40AF",   # bleu marine DeepSeek
     },
