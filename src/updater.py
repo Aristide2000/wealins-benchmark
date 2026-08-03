@@ -90,6 +90,9 @@ def tester_modele(slug: str, nom: str) -> bool:
 
     # ── Test 1 : rôle répondant ──────────────────────────
     print(f"      Test répondant ({slug})...")
+    
+    notation = None  # ← ajoute cette ligne
+
     try:
         response = client.chat.completions.create(
             model=slug,
@@ -111,9 +114,9 @@ def tester_modele(slug: str, nom: str) -> bool:
                 response = client.chat.completions.create(
                     model=slug,
                     messages=[{"role": "user", "content": QUESTION_TEST}],
-                    max_tokens=500,
+                    max_tokens=4000,
                     temperature=0,
-                    timeout=30
+                    timeout=60
                 )
                 reponse = response.choices[0].message.content
                 if not reponse or len(reponse.strip()) < 20:
@@ -133,10 +136,14 @@ def tester_modele(slug: str, nom: str) -> bool:
         response = client.chat.completions.create(
             model=slug,
             messages=[{"role": "user", "content": PROMPT_JURY_TEST}],
-            max_tokens=100,
+            max_tokens=4000,
             temperature=0,
-            timeout=30
+            timeout=60
         )
+        notation = response.choices[0].message.content 
+        if notation is None:
+            print(f"      /!\\ Réponse juge vide (None)")
+            return False
         lignes = [l for l in notation.strip().split('\n')
                     if '-' in l and ':' in l]
         if len(lignes) < 13:  # 80% de 16 lignes minimum
@@ -146,6 +153,8 @@ def tester_modele(slug: str, nom: str) -> bool:
         return True
 
     except Exception as e:
+        print(f"      /!\\ Exception juge : {type(e).__name__}: {e}")
+        return False
         if "429" in str(e):
             print(f"      Rate limit juge, retry dans 3s...")
             time.sleep(3)
@@ -153,11 +162,12 @@ def tester_modele(slug: str, nom: str) -> bool:
                 response = client.chat.completions.create(
                     model=slug,
                     messages=[{"role": "user", "content": PROMPT_JURY_TEST}],
-                    max_tokens=100,
+                    max_tokens=4000,
                     temperature=0,
-                    timeout=30
+                    timeout=60
                 )
                 notation = response.choices[0].message.content
+                print(f"      DEBUG notation: {repr(notation[:50]) if notation else 'None'}")
                 if not notation or ":" not in notation:
                     print(f"      /!\\ Format incorrect après retry")
                     return False
