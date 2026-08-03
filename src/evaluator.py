@@ -56,23 +56,40 @@ def construire_prompt_notation(
         f"{p}-absence_hallucinations:8\n"
         f"{p}-applicabilite_pratique:7\n"
         f"{p}-gestion_incertitude:6"
-        for p in pseudos[:2]
+        for p in pseudos  # tous les pseudos, pas [:2]
     ])
 
-    prompt = f"""Tu es un expert en assurance vie luxembourgeoise.
-Note chaque répondant sur 8 critères de 0 à 10.
+    prompt = f"""Tu es un expert senior en assurance vie luxembourgeoise.
 
-QUESTION: {question['question']}
+QUESTION : {question['question']}
 
-RÉPONSES À NOTER:
+RÉPONSES À NOTER :
 {reponses_texte}
 
-RÉPONDS EXACTEMENT DANS CE FORMAT
-(une note par ligne, critere:note) :
+CRITÈRES ET POIDS :
+- exactitude_technique (20%) : faits et affirmations corrects ?
+- maitrise_vocabulaire (20%) : vocabulaire technique maîtrisé ?
+- pertinence_reglementaire (15%) : références légales correctes ?
+- completude (15%) : tous les aspects traités ?
+- clarte_lisibilite (10%) : réponse claire et structurée ?
+- absence_hallucinations (10%) : aucune information inventée ?
+- applicabilite_pratique (5%) : utilisable par un professionnel ?
+- gestion_incertitude (5%) : doutes signalés si nécessaire ?
 
+FORMULE DU SCORE FINAL :
+Score = (exactitude×0.20) + (vocabulaire×0.20)
+      + (réglementaire×0.15) + (complétude×0.15)
+      + (clarté×0.10) + (hallucinations×0.10)
+      + (applicabilité×0.05) + (incertitude×0.05)
+
+EXEMPLE DE FORMAT ATTENDU :
 {exemple}
 
-Continue pour tous les répondants {', '.join(pseudos)}.
+RÉPONDS STRICTEMENT dans ce format pour TOUS
+les répondants {', '.join(pseudos)}.
+Une note entière (0-10) par ligne.
+Aucun texte supplémentaire.
+
 NOTES:"""
 
     return prompt
