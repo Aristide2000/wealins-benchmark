@@ -13,6 +13,8 @@ Utilisé par :
 - benchmark.py → après la collecte des réponses
 """
 
+from time import time
+
 from questions import QUESTIONS, CRITERES
 from src.llm_clients import LLM_CONFIG, appeler_llm
 from src.utils import (
@@ -40,8 +42,7 @@ def construire_prompt_notation(
             str(question["id"]),
             reponse.get(question["id"], "Pas de réponse")
         )
-        mots = str(reponse_q).split()
-        reponse_courte = " ".join(mots[:300])
+        reponse_courte = str(reponse_q)
         reponses_texte += f"\n[{pseudo}]: {reponse_courte}\n"
 
     # Liste des pseudos présents
@@ -134,6 +135,9 @@ def jury_tournant(
 
             # Appelle le LLM juge
             reponse_brute = appeler_llm(llm_juge_id, prompt)
+            
+            import time
+            time.sleep(2)
 
             # Essaie d'abord le format texte
             # puis JSON en fallback

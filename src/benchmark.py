@@ -70,7 +70,7 @@ def collecter_reponses() -> dict:
             prompt = f"""Tu es un expert en assurance vie luxembourgeoise.
 Réponds de manière précise, complète et professionnelle.
 Utilise le vocabulaire technique approprié.
-Limite ta réponse à 300 mots maximum.
+Sois concis et précis, vise 250-300 mots.
 
 Question : {q['question']}
 

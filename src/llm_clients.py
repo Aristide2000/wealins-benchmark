@@ -17,28 +17,28 @@ load_dotenv()
 
 LLM_CONFIG = {
     "gpt": {
-        "nom":      "Copilot (GPT-4o)",
-        "modele":   "openai/gpt-4o",
+        "nom":      "Copilot (GPT)",
+        "modele":   "openai/gpt-5.6-luna",
         "provider": "OpenRouter",
-        "couleur":  "#10A37F",   # vert OpenAI (le moteur !)
+        "couleur":  "#10A37F",   # vert OpenAI
     },
     "claude": {
         "nom":      "Claude",
-        "modele":   "anthropic/claude-3-haiku",
+        "modele":   "anthropic/claude-opus-5-fast",
         "provider": "OpenRouter",
         "couleur":  "#D97757",   # terracotta Anthropic
     },
     "gemini": {
         "nom":      "Gemini",
-        "modele":   "google/gemini-2.5-flash",
+        "modele":   "google/gemini-3.6-flash",
         "provider": "OpenRouter",
-        "couleur":  "#9168C0",   # violet du dégradé Gemini
+        "couleur":  "#9168C0",   # violet Gemini
     },
     "llama": {
         "nom":      "Llama",
-        "modele":   "meta-llama/llama-3.3-70b-instruct",
+        "modele":   "meta-llama/llama-4-maverick",
         "provider": "OpenRouter",
-        "couleur":  "#0866FF",   # bleu Meta (le seul bleu vif)
+        "couleur":  "#0866FF",   # bleu Meta
     },
     "mistral": {
         "nom":      "Mistral",
@@ -50,13 +50,13 @@ LLM_CONFIG = {
         "nom":      "DeepSeek",
         "modele":   "deepseek/deepseek-v4-flash",
         "provider": "OpenRouter",
-        "couleur":  "#4D6BFE",   # indigo DeepSeek
+        "couleur":  "#1E40AF",   # bleu marine DeepSeek
     },
     "grok": {
         "nom":      "Grok",
         "modele":   "x-ai/grok-4.5",
         "provider": "OpenRouter",
-        "couleur":  "#333333",   # noir xAI (adouci pour lisibilité)
+        "couleur":  "#333333",   # noir xAI
     },
 }
 
