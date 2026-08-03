@@ -17,6 +17,7 @@ import re
 import subprocess
 import time
 from src.llm_clients import LLM_CONFIG
+from questions import QUESTIONS
 
 # Question de test simple
 QUESTION_TEST = (
@@ -25,20 +26,57 @@ QUESTION_TEST = (
     "Répondez en 3 phrases maximum."
 )
 
-# Prompt de notation test
-PROMPT_JURY_TEST = """Tu es un expert en assurance vie.
-Voici une réponse anonymisée (répondant : X) :
+# Question de test — vraie question métier
+QUESTION_TEST = QUESTIONS[1]['question']  # Q2 Hong Kong
 
-\"La LPS permet aux compagnies d'assurance de proposer
-leurs produits dans d'autres pays de l'UE sans y établir
-une filiale, sous réserve de respecter la réglementation
-du pays d'origine.\"
+# Prompt jury test — proche du vrai benchmark
+PROMPT_JURY_TEST = f"""Tu es un expert senior en assurance vie luxembourgeoise.
 
-Attribue une note de 0 à 10 sur le critère suivant :
-- exactitude_technique
+QUESTION : {QUESTIONS[1]['question']}
 
-Réponds UNIQUEMENT avec ce format, rien d'autre :
-X-exactitude_technique:NOTE"""
+RÉPONSES À NOTER :
+
+[A]: Hong Kong ne dispose pas d'obligation générale de déclaration
+des comptes étrangers pour ses résidents fiscaux. Le territoire
+n'a pas adopté le standard CRS de manière contraignante pour
+ses propres résidents.
+
+[B]: En France, les résidents doivent déclarer leurs comptes
+étrangers via le formulaire 3916 chaque année fiscale.
+
+CRITÈRES ET POIDS :
+- exactitude_technique (20%) : faits et affirmations corrects ?
+- maitrise_vocabulaire (20%) : vocabulaire technique maîtrisé ?
+- pertinence_reglementaire (15%) : références légales correctes ?
+- completude (15%) : tous les aspects traités ?
+- clarte_lisibilite (10%) : réponse claire et structurée ?
+- absence_hallucinations (10%) : aucune information inventée ?
+- applicabilite_pratique (5%) : utilisable par un professionnel ?
+- gestion_incertitude (5%) : doutes signalés si nécessaire ?
+
+EXEMPLE DE FORMAT ATTENDU :
+A-exactitude_technique:8
+A-maitrise_vocabulaire:7
+A-pertinence_reglementaire:9
+A-completude:6
+A-clarte_lisibilite:8
+A-absence_hallucinations:9
+A-applicabilite_pratique:7
+A-gestion_incertitude:5
+B-exactitude_technique:3
+B-maitrise_vocabulaire:4
+B-pertinence_reglementaire:2
+B-completude:3
+B-clarte_lisibilite:7
+B-absence_hallucinations:5
+B-applicabilite_pratique:2
+B-gestion_incertitude:4
+
+RÉPONDS STRICTEMENT dans ce format pour A et B.
+Une note entière (0-10) par ligne.
+Aucun texte supplémentaire.
+
+NOTES:"""
 
 
 def tester_modele(slug: str, nom: str) -> bool:
