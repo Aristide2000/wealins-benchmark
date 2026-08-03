@@ -18,7 +18,7 @@ load_dotenv()
 LLM_CONFIG = {
     "gpt": {
         "nom":      "Copilot (GPT)",
-        "modele":   "openai/gpt-5.6-luna",
+        "modele":   "openai/gpt-5.6-luna-pro",
         "provider": "OpenRouter",
         "couleur":  "#10A37F",   # vert OpenAI
     },
