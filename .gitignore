@@ -12,3 +12,4 @@ __pycache__/
 # Données brutes
 data/raw/
 results/historique.json 
+".vscode/" 
