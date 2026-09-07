@@ -18,7 +18,7 @@ load_dotenv()
 LLM_CONFIG = {
     "gpt": {
         "nom":      "Copilot (GPT)",
-        "modele":   "openai/gpt-5.6-luna-pro",
+        "modele":   "openai/gpt-6-astra",
         "provider": "OpenRouter",
         "couleur":  "#10A37F",   # vert OpenAI
     },
@@ -30,7 +30,7 @@ LLM_CONFIG = {
     },
     "gemini": {
         "nom":      "Gemini",
-        "modele":   "google/gemini-3.6-flash",
+        "modele":   "google/gemini-3.8-flash",
         "provider": "OpenRouter",
         "couleur":  "#9168C0",   # violet Gemini
     },
@@ -48,13 +48,13 @@ LLM_CONFIG = {
     },
     "deepseek": {
         "nom":      "DeepSeek",
-        "modele":   "deepseek/deepseek-v4-flash-0731",
+        "modele":   "deepseek/deepseek-v4-flash-vision-exp",
         "provider": "OpenRouter",
         "couleur":  "#1E40AF",   # bleu marine DeepSeek
     },
     "grok": {
         "nom":      "Grok",
-        "modele":   "x-ai/grok-4.5",
+        "modele":   "x-ai/grok-4.6",
         "provider": "OpenRouter",
         "couleur":  "#333333",   # noir xAI
     },
